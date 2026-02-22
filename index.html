@@ -31,6 +31,7 @@
             </div>
 
             <button id="startGameBtn" class="btn-primary">🎮 Start Game</button>
+            <button id="jobsBoardBtn" class="btn-secondary">💼 Browse Global Jobs</button>
         </div>
     </div>
 
@@ -59,6 +60,7 @@
                     <div class="player-info">
                         <span id="playerNameDisplay" class="player-name"></span>
                         <span id="playerCreditsDisplay" class="player-credits"></span>
+                        <button id="topUpBtn" class="btn-topup">💳 Buy Credits</button>
                     </div>
                     <div id="playerHand" class="card-hand"></div>
                 </div>
@@ -86,6 +88,48 @@
             <div id="winMessage"></div>
             <div id="finalScores"></div>
             <button id="playAgainBtn" class="btn-primary">🔄 Play Again</button>
+        </div>
+    </div>
+
+    <!-- Star Moment Overlay -->
+    <div id="starMoment" class="star-moment hidden">
+        <div class="star-moment-content">
+            <div class="star-moment-stars">⭐⭐⭐</div>
+            <div id="starMomentText" class="star-moment-text"></div>
+        </div>
+    </div>
+
+    <!-- Jobs Board Modal -->
+    <div id="jobsBoardModal" class="modal-overlay hidden">
+        <div class="modal-box modal-wide">
+            <h3>💼 Global Jobs Board</h3>
+            <p class="modal-subtitle">Curated opportunities from Phu AI · PhuOptimizer81 · Phubers.blog &amp; partner AI networks worldwide</p>
+            <div id="jobsList" class="jobs-list"></div>
+            <button id="closeJobsBtn" class="btn-primary" style="margin-top:16px">Close</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3>💳 Buy Credits</h3>
+            <p class="modal-subtitle">Select an amount and payment method:</p>
+            <div class="pay-amounts">
+                <button class="amount-btn active" data-amount="500">+500</button>
+                <button class="amount-btn" data-amount="1000">+1,000</button>
+                <button class="amount-btn" data-amount="2500">+2,500</button>
+                <button class="amount-btn" data-amount="5000">+5,000</button>
+            </div>
+            <div class="pay-methods">
+                <button class="pay-btn active" data-method="card">💳 Card</button>
+                <button class="pay-btn" data-method="paypal">🅿 PayPal</button>
+                <button class="pay-btn" data-method="crypto">₿ Crypto</button>
+                <button class="pay-btn" data-method="bank">🏦 Bank Transfer</button>
+                <button class="pay-btn" data-method="mobile">📱 Mobile Pay</button>
+                <button class="pay-btn" data-method="cash">💵 Cash</button>
+            </div>
+            <button id="confirmPayBtn" class="btn-primary" style="margin-top:14px">✓ Confirm Payment</button>
+            <button id="cancelPayBtn" class="btn-cancel">Cancel</button>
         </div>
     </div>
 

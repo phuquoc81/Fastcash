@@ -12,6 +12,20 @@ const RANK_ORDER = { 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10, J:11, Q:12, 
 
 const TARGET_SCORE = 500;
 
+// Global jobs board data — opportunities from Phu AI, PhuOptimizer81, Phubers.blog & partners
+const JOB_LISTINGS = [
+    { title: 'AI Prompt Engineer',           org: 'Phu AI',              location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'ML Optimization Specialist',   org: 'PhuOptimizer81',      location: 'Remote · Global', type: 'Contract'   },
+    { title: 'Tech Blog Content Creator',    org: 'Phubers.blog',        location: 'Remote · Global', type: 'Part-time'  },
+    { title: 'Fullstack Game Developer',     org: 'Fastcash',            location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'Payment Systems Engineer',     org: 'Fastcash',            location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'Cybersecurity Analyst',        org: 'Fastcash Security',   location: 'Remote · Global', type: 'Contract'   },
+    { title: 'AI Data Annotator',            org: 'Phu AI',              location: 'Remote · Global', type: 'Freelance'  },
+    { title: 'SEO & Optimization Lead',      org: 'PhuOptimizer81',      location: 'Remote · Global', type: 'Part-time'  },
+    { title: 'Quantum UX Designer',          org: 'Phu AI',              location: 'Remote · Global', type: 'Contract'   },
+    { title: 'AI Engine Integration Dev',    org: 'Phubers.blog',        location: 'Remote · Global', type: 'Freelance'  },
+];
+
 class BisswizGame {
     constructor() {
         this.players = [];
@@ -25,9 +39,13 @@ class BisswizGame {
         this.betIndex = 0;
         this.bettingPhase = false;
         this.playingPhase = false;
+        this._consecutiveTricks = []; // consecutive trick count per player
+        this._selectedPayAmount = 500;
+        this._selectedPayMethod = 'card';
 
         this.setupEventListeners();
         this.updatePlayerSetup(2);
+        this.initJobsBoard();
     }
 
     // ── Setup ────────────────────────────────────────────────────────────────
@@ -46,6 +64,35 @@ class BisswizGame {
         document.getElementById('playAgainBtn').addEventListener('click', () => {
             document.getElementById('winScreen').classList.add('hidden');
             document.getElementById('setupScreen').classList.remove('hidden');
+        });
+
+        // Jobs board
+        document.getElementById('jobsBoardBtn').addEventListener('click', () => {
+            document.getElementById('jobsBoardModal').classList.remove('hidden');
+        });
+        document.getElementById('closeJobsBtn').addEventListener('click', () => {
+            document.getElementById('jobsBoardModal').classList.add('hidden');
+        });
+
+        // Payment modal
+        document.getElementById('topUpBtn').addEventListener('click', () => this.openPayment());
+        document.getElementById('confirmPayBtn').addEventListener('click', () => this.confirmPayment());
+        document.getElementById('cancelPayBtn').addEventListener('click', () => {
+            document.getElementById('paymentModal').classList.add('hidden');
+        });
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', e => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this._selectedPayAmount = parseInt(e.target.dataset.amount);
+            });
+        });
+        document.querySelectorAll('.pay-btn').forEach(btn => {
+            btn.addEventListener('click', e => {
+                document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this._selectedPayMethod = e.target.dataset.method;
+            });
         });
     }
 
@@ -69,7 +116,7 @@ class BisswizGame {
         const startCredits = Math.max(100, parseInt(document.getElementById('startingCredits').value) || 500);
 
         this.players = Array.from({ length: playerCount }, (_, i) => ({
-            name: document.getElementById(`pName${i}`).value.trim() || `Player ${i + 1}`,
+            name: this.sanitizeName(document.getElementById(`pName${i}`).value.trim() || `Player ${i + 1}`),
             isHuman: i === 0,
             hand: [],
             credits: startCredits,
@@ -134,6 +181,7 @@ class BisswizGame {
         document.getElementById('roundBadge').textContent = this.roundNumber;
         this.currentTrick = [];
         this.bets = new Array(this.players.length).fill(0);
+        this._consecutiveTricks = new Array(this.players.length).fill(0);
 
         this.dealCards();
         this.updateScoreboard();
@@ -222,11 +270,12 @@ class BisswizGame {
         for (let i = 1; i < this.players.length; i++) {
             const player = this.players[i];
             const isCurrent = this.playingPhase && this.currentPlayer === i;
+            const safeName = this.escapeHTML(player.name);
             const div = document.createElement('div');
             div.className = 'opponent-area';
             div.innerHTML = `
                 <div class="opponent-name${isCurrent ? ' active' : ''}">
-                    ${player.name}${isCurrent ? ' ▶' : ''}
+                    ${safeName}${isCurrent ? ' ▶' : ''}
                 </div>
                 <div class="opponent-hand">
                     ${player.hand.map(() => '<div class="card card-back">🃏</div>').join('')}
@@ -275,7 +324,7 @@ class BisswizGame {
             const div = document.createElement('div');
             div.className = 'score-row';
             div.innerHTML = `
-                <div class="team-name">${this.teamName(i)}</div>
+                <div class="team-name">${this.escapeHTML(this.teamName(i))}</div>
                 <div class="score-bar-container"><div class="score-bar" style="width:${progress}%"></div></div>
                 <div class="score-value">${score} / 500</div>
             `;
@@ -353,6 +402,15 @@ class BisswizGame {
         this.players[winnerPlayerIndex].tricksWon++;
         this.players[winnerPlayerIndex].pointsWon += trickPts;
 
+        // Track consecutive tricks and detect star moments
+        this._consecutiveTricks = this._consecutiveTricks.map((c, i) => i === winnerPlayerIndex ? c + 1 : 0);
+        const consecutive = this._consecutiveTricks[winnerPlayerIndex];
+        if (trickPts >= 20) {
+            this.showStarMoment(this.players[winnerPlayerIndex].name, `Captured ${trickPts} points in one trick!`);
+        } else if (consecutive >= 3) {
+            this.showStarMoment(this.players[winnerPlayerIndex].name, `${consecutive} tricks in a row!`);
+        }
+
         this.showMessage(`${this.players[winnerPlayerIndex].name} wins the trick! +${trickPts} pts`);
 
         this.trickLeader = winnerPlayerIndex;
@@ -419,7 +477,7 @@ class BisswizGame {
 
         document.getElementById('winMessage').innerHTML = `
             <h1>🎉 Game Over!</h1>
-            <h2>${this.teamName(winnerTeamIdx)} Wins!</h2>
+            <h2>${this.escapeHTML(this.teamName(winnerTeamIdx))} Wins!</h2>
             <p>Reached ${this.teamScores[winnerTeamIdx]} points — first to ${TARGET_SCORE}!</p>
         `;
 
@@ -427,7 +485,7 @@ class BisswizGame {
             <h3>Final Scores</h3>
             ${this.teamScores.map((score, i) => `
                 <div class="final-score-row">
-                    <span>${this.teamName(i)}</span>
+                    <span>${this.escapeHTML(this.teamName(i))}</span>
                     <span>${score} pts</span>
                     <span>💰 ${this.teams[i].map(pi => this.players[pi].credits).join(' / ')} credits</span>
                 </div>
@@ -439,8 +497,72 @@ class BisswizGame {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    teamName(teamIndex) {
-        return this.teams[teamIndex].map(i => this.players[i].name).join(' & ');
+    // Escape HTML special characters to prevent XSS when inserting into innerHTML
+    escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Remove HTML-dangerous characters and limit length for player name input
+    sanitizeName(name) {
+        return name.replace(/[<>&"']/g, '').substring(0, 30);
+    }
+
+    // ── Star Moment ───────────────────────────────────────────────────────────
+
+    showStarMoment(playerName, reason) {
+        const el = document.getElementById('starMoment');
+        document.getElementById('starMomentText').textContent = `${playerName} — ${reason}`;
+        el.classList.remove('hidden');
+        clearTimeout(this._starTimer);
+        this._starTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+    }
+
+    // ── Jobs Board ────────────────────────────────────────────────────────────
+
+    initJobsBoard() {
+        const list = document.getElementById('jobsList');
+        list.innerHTML = '';
+        JOB_LISTINGS.forEach(job => {
+            const div = document.createElement('div');
+            div.className = 'job-card';
+            div.innerHTML = `
+                <div class="job-title">${this.escapeHTML(job.title)}</div>
+                <div class="job-meta">
+                    <span class="job-org">${this.escapeHTML(job.org)}</span>
+                    <span class="job-location">📍 ${this.escapeHTML(job.location)}</span>
+                    <span class="job-type">${this.escapeHTML(job.type)}</span>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    // ── Payment ───────────────────────────────────────────────────────────────
+
+    openPayment() {
+        this._selectedPayAmount = 500;
+        this._selectedPayMethod = 'card';
+        document.querySelectorAll('.amount-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        document.querySelectorAll('.pay-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    confirmPayment() {
+        const amount = this._selectedPayAmount;
+        const method = this._selectedPayMethod;
+        if (this.players.length > 0 && amount > 0) {
+            this.players[0].credits += Math.floor(amount);
+            this.updatePlayerInfo();
+            this.updateScoreboard();
+        }
+        document.getElementById('paymentModal').classList.add('hidden');
+        const methodLabel = { card: 'Card', paypal: 'PayPal', crypto: 'Crypto', bank: 'Bank Transfer', mobile: 'Mobile Pay', cash: 'Cash' }[method] || method;
+        this.showMessage(`✅ +${amount} credits added via ${methodLabel}!`);
     }
 
     showMessage(msg) {
@@ -449,6 +571,10 @@ class BisswizGame {
         el.classList.add('show');
         clearTimeout(this._msgTimer);
         this._msgTimer = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    teamName(teamIndex) {
+        return this.teams[teamIndex].map(i => this.players[i].name).join(' & ');
     }
 }
 
