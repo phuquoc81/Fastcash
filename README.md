@@ -1,45 +1,71 @@
-# Phuoptimizer-81
+# Fastcash
 
-## 🚀 Phu AI Web Application
+## ⚡ Passive & Affiliate Income · Remote Jobs by Phu AI
 
-A quantum-powered puzzle and problem solver with advanced AI capabilities featuring:
-- 🧠 **Phu AI** - Advanced puzzle solving engine
-- ⚛️ **Quantum ZX Core** - Real-time quantum visualization
-- 🔮 **Future Prediction** - Quantum probability analysis
-- ⚙️ **Phuoptimizer 81** - Optimization control (levels 1-81)
-- 🔗 **Phubers Protocol** - Advanced quantum processing
-- 📺 **helloPhú YouTube** - Channel integration
-
-### Planned Capabilities
-- 🌐 Multi-language conversation and translation support
-- 🧮 Advanced mathematics and complex problem-solving
-- ☁️ Cloud mining webapp mode for distributed compute experiments
-- 💳 Optional payment collection with owner payout flow for hosted deployments
-
-### Quick Start
-1. Open `index.html` in your web browser
-2. Enter a puzzle or problem in the text area
-3. Click "Solve with Phu AI" to get quantum-powered solutions
-
-### Commit Messages
-Use a short, clear summary in the imperative mood. If you follow a simple prefix, keep it consistent.
-
-Example commit messages:
-- `docs: add commit message guidance`
-- `fix: handle empty puzzle input`
-- `ui: refine solve button label`
-
-### Example Queries
-- `What is 25 + 17?`
-- `Fibonacci sequence for n=10`
-- `Is 17 a prime number?`
-- `Predict the future of quantum computing`
-
-For detailed documentation, see [README-WEBAPP.md](README-WEBAPP.md)
+Fastcash automatically generates **passive income** and **affiliate income** for users, and gathers **remote job opportunities** that are worked on automatically using **Phu AI**, **Phuoptimizer 81**, and **[phubers.blog](https://phubers.blog)**.
 
 ---
 
-# TopupGrade64-octo-
-Version 8x8x8x8 equal 8x8x8x8  equal Andriod 64 
-#upgrade phuhanddevice 81 to 7000 years future 
-lignment with the 39 esclipes form the galaxies 181224263438122956566897765726181454488811112161981apqnphuquocnguyen td bank 43821 004 6369582 anhvankiet81@gmail.com 13653662208 Phu Quoc Nguyen get paid at holy grail st hih p4p n3n o2o 181 922 188 266 544 644 844 919 724 655 321 vnd ptc peacekeeper xxix nzo opn gze ntr gig git fif phu ai phu quoc nguyen add shipyard flying saucer ufo phu quoc nguyen repair shop aliens add vlan 100000 to port 3339 wingman 6662 wingman 6663 wingman 7774 wingman 7775 add flying engine test github test 
+## Features
+
+### 💰 Passive Income Engine
+- Multiple automatic income streams powered by Phu AI
+- Streams: Phu AI Cloud Tasks, Phuoptimizer Rewards, Quantum Staking Pool, Auto-Mining Node
+- Income rate scales with Phuoptimizer 81 level and mode
+
+### 🔗 Affiliate Income Engine
+- Automatic affiliate link tracking via phubers.blog and partner networks
+- Programs: phubers.blog Content Affiliate, Phuoptimizer 81 Software Referral, Phu AI Pro, Remote Work Network
+- Earnings update in real time
+
+### 🤖 Remote Jobs — Powered by Phu AI
+- Phu AI scans companies for remote job opportunities
+- Jobs are listed with skills, pay rate, and company
+- Click **Work with Phu AI** to have Phu AI complete a job automatically
+- Track job progress in real time
+
+### ⚙️ Phuoptimizer 81
+- Adjustable optimization level (1–81)
+- Protocol modes: Standard, Advanced, Quantum ✨
+- Quantum Boost toggle for maximum performance
+- Live quantum visualization canvas
+- Settings affect all income stream rates
+
+### 📰 phubers.blog Integration
+- Latest blog posts from phubers.blog displayed in-app
+- Every post drives affiliate income through the Fastcash network
+- Direct link to [phubers.blog](https://phubers.blog)
+
+---
+
+## Quick Start
+
+1. Open `index.html` in any modern web browser
+2. Income starts accumulating automatically on page load
+3. Use the **Remote Jobs** tab to let Phu AI work jobs for you
+4. Tune **Phuoptimizer 81** to maximize income multiplier
+5. Visit **phubers.blog** tab for affiliate content
+
+---
+
+## Files
+
+- `index.html` — App structure and layout
+- `styles.css` — Visual styling and animations
+- `script.js` — Fastcash engine (income, jobs, optimizer)
+
+## Commit Messages
+
+Use a short, clear summary in the imperative mood.
+
+Examples:
+- `feat: add new passive income stream`
+- `fix: correct optimizer multiplier`
+- `ui: improve job board layout`
+
+---
+
+## License
+
+© 2026 Fastcash · Phu AI · Phuoptimizer 81 · phubers.blog
+
