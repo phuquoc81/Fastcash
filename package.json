@@ -1,0 +1,20 @@
+{
+  "name": "fastcash",
+  "version": "1.0.0",
+  "description": "FastCash application with OpenTelemetry",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
+    "@opentelemetry/sdk-web": "^1.17.0",
+    "@opentelemetry/auto-instrumentations-web": "^0.37.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.45.0",
+    "@opentelemetry/sdk-trace-web": "^1.17.0",
+    "@opentelemetry/resources": "^1.17.0",
+    "@opentelemetry/semantic-conventions": "^1.17.0"
+  },
+  "devDependencies": {}
+}
