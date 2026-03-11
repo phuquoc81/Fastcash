@@ -30,12 +30,12 @@ const REMOTE_JOB_TEMPLATES = [
 ];
 
 const BLOG_POSTS = [
-    { title: 'How Phu AI Earned Me $1,200 While I Slept',    date: 'Feb 20, 2026', tag: 'Passive Income',  img: '💸' },
-    { title: 'Top 10 Remote Jobs Phu AI Found This Week',     date: 'Feb 18, 2026', tag: 'Remote Jobs',     img: '🤖' },
-    { title: 'Phuoptimizer 81: Maximize Your Affiliate ROI',  date: 'Feb 15, 2026', tag: 'Affiliate',       img: '⚙️' },
-    { title: 'Getting Started with Fastcash in 5 Minutes',    date: 'Feb 12, 2026', tag: 'Guide',           img: '⚡' },
-    { title: 'Quantum Earnings: The phubers.blog Strategy',   date: 'Feb 10, 2026', tag: 'Strategy',        img: '🔮' },
-    { title: 'Why Remote Companies Love Phu AI Workers',      date: 'Feb 7, 2026',  tag: 'Remote Jobs',     img: '💼' },
+    { title: 'How Phu AI Earned Me $1,200 While I Slept',    date: 'Feb 20, 2026', tag: 'Passive Income',  img: '&#x1F4B8;' },
+    { title: 'Top 10 Remote Jobs Phu AI Found This Week',     date: 'Feb 18, 2026', tag: 'Remote Jobs',     img: '&#x1F916;' },
+    { title: 'Phuoptimizer 81: Maximize Your Affiliate ROI',  date: 'Feb 15, 2026', tag: 'Affiliate',       img: '&#x2699;&#xFE0F;' },
+    { title: 'Getting Started with Fastcash in 5 Minutes',    date: 'Feb 12, 2026', tag: 'Guide',           img: '&#x26A1;' },
+    { title: 'Quantum Earnings: The phubers.blog Strategy',   date: 'Feb 10, 2026', tag: 'Strategy',        img: '&#x1F52E;' },
+    { title: 'Why Remote Companies Love Phu AI Workers',      date: 'Feb 7, 2026',  tag: 'Remote Jobs',     img: '&#x1F4BC;' },
 ];
 
 const TICK_INTERVAL_MS = 1000;   // earn every second
@@ -254,7 +254,7 @@ class FastcashApp {
                 </div>
                 <div class="fc-affiliate-right">
                     <span class="fc-stream-rate">+$${rate}/hr</span>
-                    <a href="${prog.url}" target="_blank" rel="noopener noreferrer" class="fc-link">Visit →</a>
+                    <a href="${prog.url}" target="_blank" rel="noopener noreferrer" class="fc-link">Visit &rarr;</a>
                 </div>
             `;
             container.appendChild(div);
@@ -312,7 +312,7 @@ class FastcashApp {
                 <div class="fc-job-footer">
                     <span class="fc-job-status-badge fc-badge fc-badge-${this._statusColor(job.status)}">${job.status.replace('-', ' ').toUpperCase()}</span>
                     ${job.status === 'available'
-                        ? `<button class="fc-btn fc-btn-primary fc-btn-sm" data-job-id="${job.id}">🤖 Work with Phu AI</button>`
+                        ? `<button class="fc-btn fc-btn-primary fc-btn-sm" data-job-id="${job.id}">&#x1F916; Work with Phu AI</button>`
                         : job.status === 'completed'
                             ? `<span class="fc-job-earned">+$${(job.pay * (JOB_WORK_DURATION_MS / 3600000)).toFixed(2)} earned</span>`
                             : ''}
@@ -367,7 +367,7 @@ class FastcashApp {
         document.getElementById('optStats').innerHTML = `
             <div class="fc-opt-stat-row"><span>Level</span><strong>${this.optimizerLevel} / 81</strong></div>
             <div class="fc-opt-stat-row"><span>Mode</span><strong>${this.optMode.charAt(0).toUpperCase() + this.optMode.slice(1)}</strong></div>
-            <div class="fc-opt-stat-row"><span>Quantum Boost</span><strong>${this.quantumBoost ? '✅ ON' : '❌ OFF'}</strong></div>
+            <div class="fc-opt-stat-row"><span>Quantum Boost</span><strong>${this.quantumBoost ? '&#x2705; ON' : '&#x274C; OFF'}</strong></div>
             <div class="fc-opt-stat-row"><span>Multiplier</span><strong>${m.toFixed(2)}×</strong></div>
             <div class="fc-opt-stat-row"><span>Passive / hr</span><strong>$${hrPassive}</strong></div>
             <div class="fc-opt-stat-row"><span>Affiliate / hr</span><strong>$${hrAffiliate}</strong></div>
@@ -427,7 +427,7 @@ class FastcashApp {
                     <span class="fc-badge fc-badge-blue fc-badge-xs">${post.tag}</span>
                     <h3 class="fc-blog-title">${post.title}</h3>
                     <div class="fc-blog-date">${post.date}</div>
-                    <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-link">Read more →</a>
+                    <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-link">Read more &rarr;</a>
                 </div>
             `;
             grid.appendChild(card);
@@ -459,4 +459,3 @@ class FastcashApp {
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
 window.addEventListener('DOMContentLoaded', () => { new FastcashApp(); });
-
