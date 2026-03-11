@@ -107,6 +107,40 @@ class FastcashApp {
             this._log('🔗 Affiliate links refreshed through phubers.blog network.');
         });
 
+// Global jobs board data — opportunities from Phu AI, PhuOptimizer81, Phubers.blog & partners
+const JOB_LISTINGS = [
+    { title: 'AI Prompt Engineer',           org: 'Phu AI',              location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'ML Optimization Specialist',   org: 'PhuOptimizer81',      location: 'Remote · Global', type: 'Contract'   },
+    { title: 'Tech Blog Content Creator',    org: 'Phubers.blog',        location: 'Remote · Global', type: 'Part-time'  },
+    { title: 'Fullstack Game Developer',     org: 'Fastcash',            location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'Payment Systems Engineer',     org: 'Fastcash',            location: 'Remote · Global', type: 'Full-time'  },
+    { title: 'Cybersecurity Analyst',        org: 'Fastcash Security',   location: 'Remote · Global', type: 'Contract'   },
+    { title: 'AI Data Annotator',            org: 'Phu AI',              location: 'Remote · Global', type: 'Freelance'  },
+    { title: 'SEO & Optimization Lead',      org: 'PhuOptimizer81',      location: 'Remote · Global', type: 'Part-time'  },
+    { title: 'Quantum UX Designer',          org: 'Phu AI',              location: 'Remote · Global', type: 'Contract'   },
+    { title: 'AI Engine Integration Dev',    org: 'Phubers.blog',        location: 'Remote · Global', type: 'Freelance'  },
+];
+
+class BisswizGame {
+    constructor() {
+        this.players = [];
+        this.teams = [];          // array of arrays of player indices
+        this.teamScores = [];     // cumulative game scores per team
+        this.roundNumber = 0;
+        this.currentTrick = [];   // [{playerIndex, card}]
+        this.currentPlayer = 0;
+        this.trickLeader = 0;
+        this.bets = [];           // bet amount per player for current round
+        this.betIndex = 0;
+        this.bettingPhase = false;
+        this.playingPhase = false;
+        this._consecutiveTricks = []; // consecutive trick count per player
+        this._selectedPayAmount = 500;
+        this._selectedPayMethod = 'card';
+
+        this.setupEventListeners();
+        this.updatePlayerSetup(2);
+        this.initJobsBoard();
         document.getElementById('clearLogBtn').addEventListener('click', () => {
             document.getElementById('activityLog').innerHTML = '';
         });
@@ -130,8 +164,75 @@ class FastcashApp {
                 this._renderJobs();
             });
         });
+
+        // Jobs board
+        document.getElementById('jobsBoardBtn').addEventListener('click', () => {
+            document.getElementById('jobsBoardModal').classList.remove('hidden');
+        });
+        document.getElementById('closeJobsBtn').addEventListener('click', () => {
+            document.getElementById('jobsBoardModal').classList.add('hidden');
+        });
+
+        // Payment modal
+        document.getElementById('topUpBtn').addEventListener('click', () => this.openPayment());
+        document.getElementById('confirmPayBtn').addEventListener('click', () => this.confirmPayment());
+        document.getElementById('cancelPayBtn').addEventListener('click', () => {
+            document.getElementById('paymentModal').classList.add('hidden');
+        });
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', e => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this._selectedPayAmount = parseInt(e.target.dataset.amount);
+            });
+        });
+        document.querySelectorAll('.pay-btn').forEach(btn => {
+            btn.addEventListener('click', e => {
+                document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this._selectedPayMethod = e.target.dataset.method;
+            });
+        });
     }
 
+    updatePlayerSetup(count) {
+        const container = document.getElementById('playerSetup');
+        container.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const isHuman = i === 0;
+            const div = document.createElement('div');
+            div.className = 'player-input-row';
+            div.innerHTML = `
+                <label>Player ${i + 1}${isHuman ? ' (You)' : ' (CPU)'}:</label>
+                <input type="text" id="pName${i}" value="${isHuman ? 'Player 1' : 'CPU ' + i}" class="name-input">
+            `;
+            container.appendChild(div);
+        }
+    }
+
+    startGame() {
+        const playerCount = parseInt(document.querySelector('.count-btn.active').dataset.count);
+        const startCredits = Math.max(100, parseInt(document.getElementById('startingCredits').value) || 500);
+
+        this.players = Array.from({ length: playerCount }, (_, i) => ({
+            name: this.sanitizeName(document.getElementById(`pName${i}`).value.trim() || `Player ${i + 1}`),
+            isHuman: i === 0,
+            hand: [],
+            credits: startCredits,
+            pointsWon: 0,
+            tricksWon: 0,
+        }));
+
+        // Team assignment
+        if (playerCount === 4) {
+            this.teams = [[0, 2], [1, 3]];
+        } else {
+            // 2 or 3 players: each is their own team
+            this.teams = this.players.map((_, i) => [i]);
+        }
+
+        this.teamScores = this.teams.map(() => 0);
+        this.roundNumber = 0;
     // ── Optimizer tab bindings ────────────────────────────────────────────────
 
     _bindOptimizerTab() {
@@ -164,6 +265,14 @@ class FastcashApp {
         });
     }
 
+    // ── Round lifecycle ───────────────────────────────────────────────────────
+
+    startRound() {
+        this.roundNumber++;
+        document.getElementById('roundBadge').textContent = this.roundNumber;
+        this.currentTrick = [];
+        this.bets = new Array(this.players.length).fill(0);
+        this._consecutiveTricks = new Array(this.players.length).fill(0);
     // ── Tick engine ───────────────────────────────────────────────────────────
 
     _startTick() {
@@ -220,6 +329,13 @@ class FastcashApp {
         document.getElementById('grandTotal').textContent     = `$${grand.toFixed(2)}`;
     }
 
+    renderOpponents() {
+        const area = document.getElementById('opponentsArea');
+        area.innerHTML = '';
+        for (let i = 1; i < this.players.length; i++) {
+            const player = this.players[i];
+            const isCurrent = this.playingPhase && this.currentPlayer === i;
+            const safeName = this.escapeHTML(player.name);
     // ── Passive streams render ────────────────────────────────────────────────
 
     _renderPassiveStreams() {
@@ -230,6 +346,15 @@ class FastcashApp {
             const div = document.createElement('div');
             div.className = 'fc-stream-row';
             div.innerHTML = `
+                <div class="opponent-name${isCurrent ? ' active' : ''}">
+                    ${safeName}${isCurrent ? ' ▶' : ''}
+                </div>
+                <div class="opponent-hand">
+                    ${player.hand.map(() => '<div class="card card-back">🃏</div>').join('')}
+                </div>
+                <div class="opponent-stats">
+                    💰 ${player.credits} credits &nbsp;|&nbsp; 🃏 ${player.hand.length} cards
+                </div>
                 <span class="fc-stream-name">${stream.name}</span>
                 <span class="fc-stream-rate">+$${rate}/hr</span>
                 <span class="fc-badge fc-badge-green fc-badge-xs">AUTO</span>
@@ -248,6 +373,9 @@ class FastcashApp {
             const div = document.createElement('div');
             div.className = 'fc-affiliate-row';
             div.innerHTML = `
+                <div class="team-name">${this.escapeHTML(this.teamName(i))}</div>
+                <div class="score-bar-container"><div class="score-bar" style="width:${progress}%"></div></div>
+                <div class="score-value">${score} / 500</div>
                 <div class="fc-affiliate-info">
                     <span class="fc-affiliate-name">${prog.name}</span>
                     <span class="fc-affiliate-prog">${prog.program}</span>
@@ -354,6 +482,38 @@ class FastcashApp {
         }, 200);
     }
 
+    resolveTrick() {
+        const ledSuit = this.currentTrick[0].card.suit;
+        let winnerSlot = 0;
+        let highest = RANK_ORDER[this.currentTrick[0].card.rank];
+        for (let i = 1; i < this.currentTrick.length; i++) {
+            const { card } = this.currentTrick[i];
+            if (card.suit === ledSuit && RANK_ORDER[card.rank] > highest) {
+                highest = RANK_ORDER[card.rank];
+                winnerSlot = i;
+            }
+        }
+
+        const winnerPlayerIndex = this.currentTrick[winnerSlot].playerIndex;
+        const trickPts = this.currentTrick.reduce((s, { card }) => s + (CARD_POINTS[card.rank] || 0), 0);
+
+        this.players[winnerPlayerIndex].tricksWon++;
+        this.players[winnerPlayerIndex].pointsWon += trickPts;
+
+        // Track consecutive tricks and detect star moments
+        this._consecutiveTricks = this._consecutiveTricks.map((c, i) => i === winnerPlayerIndex ? c + 1 : 0);
+        const consecutive = this._consecutiveTricks[winnerPlayerIndex];
+        if (trickPts >= 20) {
+            this.showStarMoment(this.players[winnerPlayerIndex].name, `Captured ${trickPts} points in one trick!`);
+        } else if (consecutive >= 3) {
+            this.showStarMoment(this.players[winnerPlayerIndex].name, `${consecutive} tricks in a row!`);
+        }
+
+        this.showMessage(`${this.players[winnerPlayerIndex].name} wins the trick! +${trickPts} pts`);
+
+        this.trickLeader = winnerPlayerIndex;
+        this.currentPlayer = winnerPlayerIndex;
+        this.currentTrick = [];
     _statusColor(status) {
         return status === 'available' ? 'blue' : status === 'in-progress' ? 'yellow' : 'green';
     }
@@ -414,6 +574,23 @@ class FastcashApp {
         });
     }
 
+    endGame(winnerTeamIdx) {
+        document.getElementById('gameScreen').classList.add('hidden');
+        const winScreen = document.getElementById('winScreen');
+
+        document.getElementById('winMessage').innerHTML = `
+            <h1>🎉 Game Over!</h1>
+            <h2>${this.escapeHTML(this.teamName(winnerTeamIdx))} Wins!</h2>
+            <p>Reached ${this.teamScores[winnerTeamIdx]} points — first to ${TARGET_SCORE}!</p>
+        `;
+
+        document.getElementById('finalScores').innerHTML = `
+            <h3>Final Scores</h3>
+            ${this.teamScores.map((score, i) => `
+                <div class="final-score-row">
+                    <span>${this.escapeHTML(this.teamName(i))}</span>
+                    <span>${score} pts</span>
+                    <span>💰 ${this.teams[i].map(pi => this.players[pi].credits).join(' / ')} credits</span>
     // ── Blog ──────────────────────────────────────────────────────────────────
 
     _populateBlog() {
@@ -434,6 +611,74 @@ class FastcashApp {
         });
     }
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    // Escape HTML special characters to prevent XSS when inserting into innerHTML
+    escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    // Remove HTML-dangerous characters and limit length for player name input
+    sanitizeName(name) {
+        return name.replace(/[<>&"']/g, '').substring(0, 30);
+    }
+
+    // ── Star Moment ───────────────────────────────────────────────────────────
+
+    showStarMoment(playerName, reason) {
+        const el = document.getElementById('starMoment');
+        document.getElementById('starMomentText').textContent = `${playerName} — ${reason}`;
+        el.classList.remove('hidden');
+        clearTimeout(this._starTimer);
+        this._starTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+    }
+
+    // ── Jobs Board ────────────────────────────────────────────────────────────
+
+    initJobsBoard() {
+        const list = document.getElementById('jobsList');
+        list.innerHTML = '';
+        JOB_LISTINGS.forEach(job => {
+            const div = document.createElement('div');
+            div.className = 'job-card';
+            div.innerHTML = `
+                <div class="job-title">${this.escapeHTML(job.title)}</div>
+                <div class="job-meta">
+                    <span class="job-org">${this.escapeHTML(job.org)}</span>
+                    <span class="job-location">📍 ${this.escapeHTML(job.location)}</span>
+                    <span class="job-type">${this.escapeHTML(job.type)}</span>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    // ── Payment ───────────────────────────────────────────────────────────────
+
+    openPayment() {
+        this._selectedPayAmount = 500;
+        this._selectedPayMethod = 'card';
+        document.querySelectorAll('.amount-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        document.querySelectorAll('.pay-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    confirmPayment() {
+        const amount = this._selectedPayAmount;
+        const method = this._selectedPayMethod;
+        if (this.players.length > 0 && amount > 0) {
+            this.players[0].credits += Math.floor(amount);
+            this.updatePlayerInfo();
+            this.updateScoreboard();
+        }
+        document.getElementById('paymentModal').classList.add('hidden');
+        const methodLabel = { card: 'Card', paypal: 'PayPal', crypto: 'Crypto', bank: 'Bank Transfer', mobile: 'Mobile Pay', cash: 'Cash' }[method] || method;
+        this.showMessage(`✅ +${amount} credits added via ${methodLabel}!`);
     // ── Utilities ─────────────────────────────────────────────────────────────
 
     _log(msg) {
@@ -453,6 +698,10 @@ class FastcashApp {
         el.classList.add('show');
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+
+    teamName(teamIndex) {
+        return this.teams[teamIndex].map(i => this.players[i].name).join(' & ');
     }
 }
 
