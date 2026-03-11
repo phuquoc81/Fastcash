@@ -1,16 +1,111 @@
-// Bisswiz Card Game
+// Fastcash — Passive & Affiliate Income · Remote Jobs by Phu AI
 
-const SUITS = ['♠', '♥', '♦', '♣'];
-const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const IS_RED = { '♥': true, '♦': true, '♠': false, '♣': false };
+// ── Constants ────────────────────────────────────────────────────────────────
 
-// Points per card rank (Ace=11, 10=10, K=4, Q=3, J=2, others=0)
-const CARD_POINTS = { A: 11, 10: 10, K: 4, Q: 3, J: 2 };
+const PASSIVE_STREAMS = [
+    { name: 'Phu AI Cloud Tasks',    baseRate: 0.12 },
+    { name: 'Phuoptimizer Rewards',  baseRate: 0.08 },
+    { name: 'Quantum Staking Pool',  baseRate: 0.05 },
+    { name: 'Auto-Mining Node',      baseRate: 0.07 },
+];
 
-// Numeric rank order for comparisons
-const RANK_ORDER = { 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10, J:11, Q:12, K:13, A:14 };
+const AFFILIATE_PROGRAMS = [
+    { name: 'phubers.blog',          program: 'Content Affiliate',    baseRate: 0.15, url: 'https://phubers.blog' },
+    { name: 'Phuoptimizer 81',       program: 'Software Referral',    baseRate: 0.10, url: '#' },
+    { name: 'Phu AI Pro',            program: 'AI Tools Affiliate',   baseRate: 0.09, url: '#' },
+    { name: 'Remote Work Network',   program: 'Job Board Affiliate',  baseRate: 0.06, url: '#' },
+];
 
-const TARGET_SCORE = 500;
+const REMOTE_JOB_TEMPLATES = [
+    { title: 'Backend API Developer',      company: 'TechNova Inc.',       pay: 85,  skills: ['Node.js', 'REST', 'PostgreSQL'] },
+    { title: 'Machine Learning Engineer',  company: 'DataFlow Corp.',      pay: 120, skills: ['Python', 'TensorFlow', 'AWS'] },
+    { title: 'Frontend React Developer',   company: 'UX Studio Ltd.',      pay: 75,  skills: ['React', 'TypeScript', 'CSS'] },
+    { title: 'DevOps Automation',          company: 'CloudOps Global',     pay: 95,  skills: ['Docker', 'Kubernetes', 'CI/CD'] },
+    { title: 'Data Analyst',               company: 'Insight Analytics',   pay: 65,  skills: ['SQL', 'Python', 'Tableau'] },
+    { title: 'Full-Stack Engineer',        company: 'Rapid Build Co.',     pay: 100, skills: ['Vue.js', 'Django', 'Redis'] },
+    { title: 'AI Content Optimizer',       company: 'ContentMind AI',      pay: 70,  skills: ['NLP', 'SEO', 'Python'] },
+    { title: 'Blockchain Developer',       company: 'ChainWorks Labs',     pay: 110, skills: ['Solidity', 'Web3.js', 'Rust'] },
+    { title: 'Cloud Security Analyst',     company: 'SecureNet Corp.',     pay: 90,  skills: ['AWS', 'SIEM', 'Pen Testing'] },
+    { title: 'QA Automation Engineer',     company: 'QualityFirst Ltd.',   pay: 72,  skills: ['Selenium', 'Cypress', 'Jest'] },
+];
+
+const BLOG_POSTS = [
+    { title: 'How Phu AI Earned Me $1,200 While I Slept',    date: 'Feb 20, 2026', tag: 'Passive Income',  img: '💸' },
+    { title: 'Top 10 Remote Jobs Phu AI Found This Week',     date: 'Feb 18, 2026', tag: 'Remote Jobs',     img: '🤖' },
+    { title: 'Phuoptimizer 81: Maximize Your Affiliate ROI',  date: 'Feb 15, 2026', tag: 'Affiliate',       img: '⚙️' },
+    { title: 'Getting Started with Fastcash in 5 Minutes',    date: 'Feb 12, 2026', tag: 'Guide',           img: '⚡' },
+    { title: 'Quantum Earnings: The phubers.blog Strategy',   date: 'Feb 10, 2026', tag: 'Strategy',        img: '🔮' },
+    { title: 'Why Remote Companies Love Phu AI Workers',      date: 'Feb 7, 2026',  tag: 'Remote Jobs',     img: '💼' },
+];
+
+const TICK_INTERVAL_MS = 1000;   // earn every second
+const JOB_WORK_DURATION_MS = 8000; // 8 s to simulate working a job
+
+// ── Fastcash App ─────────────────────────────────────────────────────────────
+
+class FastcashApp {
+    constructor() {
+        this.passiveTotal   = 0;
+        this.affiliateTotal = 0;
+        this.jobsEarned     = 0;
+        this.jobsDone       = 0;
+        this.optimizerLevel = 81;
+        this.quantumBoost   = true;
+        this.optMode        = 'quantum';
+        this.jobs           = [];
+        this.activeFilter   = 'all';
+        this.tickCount      = 0;
+
+        this._bindNav();
+        this._bindDashboard();
+        this._bindJobsTab();
+        this._bindOptimizerTab();
+        this._populateBlog();
+        this._generateJobs();
+        this._renderJobs();
+        this._renderAffiliateList();
+        this._renderPassiveStreams();
+        this._renderOptStats();
+        this._drawCanvas();
+        this._startTick();
+
+        this._log('⚡ Fastcash started. Phu AI is working for you automatically.');
+        this._log('🔗 Affiliate links active via phubers.blog and partner network.');
+        this._log('⚙️ Phuoptimizer 81 initialized at maximum level.');
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    _bindNav() {
+        document.querySelectorAll('.fc-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fc-nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.fc-tab').forEach(t => t.classList.add('hidden'));
+                document.getElementById(`tab-${tab}`).classList.remove('hidden');
+                if (tab === 'optimizer') this._drawCanvas();
+            });
+        });
+    }
+
+    // ── Dashboard bindings ────────────────────────────────────────────────────
+
+    _bindDashboard() {
+        document.getElementById('boostPassiveBtn').addEventListener('click', () => {
+            this.passiveTotal += this._passiveRatePerSec() * 300;
+            this._updateStats();
+            this._toast('⚡ Phuoptimizer boost applied! 5-minute passive income added.');
+            this._log('⚡ Manual Phuoptimizer boost applied to passive income engine.');
+        });
+
+        document.getElementById('refreshAffiliateBtn').addEventListener('click', () => {
+            this.affiliateTotal += this._affiliateRatePerSec() * 180;
+            this._updateStats();
+            this._renderAffiliateList();
+            this._toast('🔗 Affiliate links refreshed. New conversions detected!');
+            this._log('🔗 Affiliate links refreshed through phubers.blog network.');
+        });
 
 // Global jobs board data — opportunities from Phu AI, PhuOptimizer81, Phubers.blog & partners
 const JOB_LISTINGS = [
@@ -46,24 +141,28 @@ class BisswizGame {
         this.setupEventListeners();
         this.updatePlayerSetup(2);
         this.initJobsBoard();
+        document.getElementById('clearLogBtn').addEventListener('click', () => {
+            document.getElementById('activityLog').innerHTML = '';
+        });
     }
 
-    // ── Setup ────────────────────────────────────────────────────────────────
+    // ── Jobs tab bindings ─────────────────────────────────────────────────────
 
-    setupEventListeners() {
-        document.querySelectorAll('.count-btn').forEach(btn => {
-            btn.addEventListener('click', e => {
-                document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.updatePlayerSetup(parseInt(e.target.dataset.count));
-            });
+    _bindJobsTab() {
+        document.getElementById('scanJobsBtn').addEventListener('click', () => {
+            this._generateJobs(3);
+            this._renderJobs();
+            this._toast('🔍 Phu AI scanned 50+ companies. New jobs found!');
+            this._log('🤖 Phu AI scanned remote job boards. New opportunities added.');
         });
 
-        document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
-        document.getElementById('placeBetBtn').addEventListener('click', () => this.placeBet());
-        document.getElementById('playAgainBtn').addEventListener('click', () => {
-            document.getElementById('winScreen').classList.add('hidden');
-            document.getElementById('setupScreen').classList.remove('hidden');
+        document.querySelectorAll('.fc-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fc-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.activeFilter = btn.dataset.filter;
+                this._renderJobs();
+            });
         });
 
         // Jobs board
@@ -134,43 +233,35 @@ class BisswizGame {
 
         this.teamScores = this.teams.map(() => 0);
         this.roundNumber = 0;
+    // ── Optimizer tab bindings ────────────────────────────────────────────────
 
-        document.getElementById('setupScreen').classList.add('hidden');
-        document.getElementById('gameScreen').classList.remove('hidden');
+    _bindOptimizerTab() {
+        const slider = document.getElementById('optLevelSlider');
+        const display = document.getElementById('optLevelDisplay');
 
-        this.startRound();
-    }
+        slider.addEventListener('input', () => {
+            display.textContent = slider.value;
+        });
 
-    // ── Deck ─────────────────────────────────────────────────────────────────
+        document.querySelectorAll('input[name="optMode"]').forEach(r => {
+            r.addEventListener('change', () => { this.optMode = r.value; });
+        });
 
-    createShuffledDeck() {
-        const deck = [];
-        for (const suit of SUITS) {
-            for (const rank of RANKS) {
-                deck.push({ suit, rank, points: CARD_POINTS[rank] || 0 });
-            }
-        }
-        for (let i = deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [deck[i], deck[j]] = [deck[j], deck[i]];
-        }
-        return deck;
-    }
+        document.getElementById('quantumBoostToggle').addEventListener('change', e => {
+            this.quantumBoost = e.target.checked;
+        });
 
-    dealCards() {
-        const deck = this.createShuffledDeck();
-        const n = this.players.length;
-        const perPlayer = Math.floor(52 / n);
-        this.players.forEach((player, i) => {
-            player.hand = deck.slice(i * perPlayer, (i + 1) * perPlayer);
-            // Sort by suit then rank
-            player.hand.sort((a, b) =>
-                SUITS.indexOf(a.suit) !== SUITS.indexOf(b.suit)
-                    ? SUITS.indexOf(a.suit) - SUITS.indexOf(b.suit)
-                    : RANK_ORDER[a.rank] - RANK_ORDER[b.rank]
-            );
-            player.pointsWon = 0;
-            player.tricksWon = 0;
+        document.getElementById('applyOptimizerBtn').addEventListener('click', () => {
+            this.optimizerLevel = parseInt(slider.value);
+            this.quantumBoost   = document.getElementById('quantumBoostToggle').checked;
+            this._renderPassiveStreams();
+            this._renderOptStats();
+            this._drawCanvas();
+            document.getElementById('passiveOptLevel').textContent = this.optimizerLevel;
+            document.getElementById('passiveOptBar').style.width = `${(this.optimizerLevel / 81) * 100}%`;
+            this._updateStats();
+            this._toast(`⚙️ Phuoptimizer set to level ${this.optimizerLevel} (${this.optMode}).`);
+            this._log(`⚙️ Phuoptimizer 81 updated → level ${this.optimizerLevel}, mode: ${this.optMode}, quantum boost: ${this.quantumBoost}.`);
         });
     }
 
@@ -182,86 +273,60 @@ class BisswizGame {
         this.currentTrick = [];
         this.bets = new Array(this.players.length).fill(0);
         this._consecutiveTricks = new Array(this.players.length).fill(0);
+    // ── Tick engine ───────────────────────────────────────────────────────────
 
-        this.dealCards();
-        this.updateScoreboard();
+    _startTick() {
+        setInterval(() => {
+            this.tickCount++;
+            this.passiveTotal   += this._passiveRatePerSec();
+            this.affiliateTotal += this._affiliateRatePerSec();
+            this._updateStats();
 
-        // Betting phase
-        this.bettingPhase = true;
-        this.playingPhase = false;
-        this.betIndex = 0;
-        this.processBetting();
-    }
-
-    processBetting() {
-        if (this.betIndex >= this.players.length) {
-            // All bets placed — start play
-            this.bettingPhase = false;
-            this.playingPhase = true;
-            this.currentTrick = [];
-            this.currentPlayer = this.trickLeader;
-            this.renderGame();
-            this.showMessage(`Round ${this.roundNumber} starts! ${this.players[this.currentPlayer].name} leads.`);
-            if (!this.players[this.currentPlayer].isHuman) {
-                setTimeout(() => this.cpuPlayCard(), 900);
+            // Periodically log an automatic event
+            if (this.tickCount % 30 === 0) {
+                const stream = PASSIVE_STREAMS[Math.floor(Math.random() * PASSIVE_STREAMS.length)];
+                this._log(`💰 Auto-earned $${(this._passiveRatePerSec() * 30).toFixed(2)} from ${stream.name}.`);
             }
-            return;
-        }
-
-        const player = this.players[this.betIndex];
-        if (player.isHuman) {
-            const panel = document.getElementById('bettingPanel');
-            const input = document.getElementById('betAmount');
-            document.getElementById('betRoundLabel').textContent = `Bet for Round ${this.roundNumber} (you have ${player.credits} credits):`;
-            input.max = Math.max(0, player.credits);
-            input.value = Math.min(10, player.credits);
-            panel.classList.remove('hidden');
-            this.showMessage(`💰 ${player.name}, place your bet!`);
-        } else {
-            // CPU bets a small random amount (capped at 20% of credits, 0 if broke)
-            const maxBet = Math.floor(player.credits * 0.2);
-            const bet = player.credits > 0 ? Math.floor(Math.random() * maxBet) + 1 : 0;
-            this.bets[this.betIndex] = Math.min(bet, player.credits);
-            this.betIndex++;
-            this.processBetting();
-        }
-    }
-
-    placeBet() {
-        const player = this.players[this.betIndex];
-        let bet = parseInt(document.getElementById('betAmount').value) || 0;
-        bet = Math.max(0, Math.min(bet, player.credits));
-        this.bets[this.betIndex] = bet;
-        document.getElementById('bettingPanel').classList.add('hidden');
-        this.betIndex++;
-        this.processBetting();
-    }
-
-    // ── Rendering ─────────────────────────────────────────────────────────────
-
-    renderGame() {
-        this.renderPlayerHand();
-        this.renderOpponents();
-        this.renderTrickArea();
-        this.updateScoreboard();
-        this.updatePlayerInfo();
-    }
-
-    renderPlayerHand() {
-        const hand = document.getElementById('playerHand');
-        hand.innerHTML = '';
-        const player = this.players[0];
-        player.hand.forEach((card, index) => {
-            const el = this.makeCardElement(card);
-            const playable = this.playingPhase &&
-                             this.currentPlayer === 0 &&
-                             this.isCardPlayable(card, player.hand);
-            if (playable) {
-                el.classList.add('playable');
-                el.addEventListener('click', () => this.humanPlayCard(index));
+            if (this.tickCount % 45 === 0) {
+                const prog = AFFILIATE_PROGRAMS[Math.floor(Math.random() * AFFILIATE_PROGRAMS.length)];
+                this._log(`🔗 New affiliate conversion via ${prog.name} (+$${(this._affiliateRatePerSec() * 45).toFixed(2)}).`);
             }
-            hand.appendChild(el);
-        });
+        }, TICK_INTERVAL_MS);
+    }
+
+    // ── Rate calculation ──────────────────────────────────────────────────────
+
+    _multiplier() {
+        const levelFactor = this.optimizerLevel / 81;
+        const modeFactor  = this.optMode === 'quantum' ? 1.5 : this.optMode === 'advanced' ? 1.2 : 1.0;
+        const boostFactor = this.quantumBoost ? 1.3 : 1.0;
+        return levelFactor * modeFactor * boostFactor;
+    }
+
+    _passiveRatePerSec() {
+        const base = PASSIVE_STREAMS.reduce((s, st) => s + st.baseRate, 0) / 3600;
+        return base * this._multiplier();
+    }
+
+    _affiliateRatePerSec() {
+        const base = AFFILIATE_PROGRAMS.reduce((s, p) => s + p.baseRate, 0) / 3600;
+        return base * this._multiplier();
+    }
+
+    // ── Stats display ─────────────────────────────────────────────────────────
+
+    _updateStats() {
+        const hrPassive   = this._passiveRatePerSec() * 3600;
+        const hrAffiliate = this._affiliateRatePerSec() * 3600;
+        const grand = this.passiveTotal + this.affiliateTotal + this.jobsEarned;
+
+        document.getElementById('passiveTotal').textContent   = `$${this.passiveTotal.toFixed(2)}`;
+        document.getElementById('passiveRate').textContent    = `+$${hrPassive.toFixed(2)} / hr`;
+        document.getElementById('affiliateTotal').textContent = `$${this.affiliateTotal.toFixed(2)}`;
+        document.getElementById('affiliateRate').textContent  = `+$${hrAffiliate.toFixed(2)} / hr`;
+        document.getElementById('jobsDone').textContent       = this.jobsDone;
+        document.getElementById('jobsEarned').textContent     = `$${this.jobsEarned.toFixed(2)} earned`;
+        document.getElementById('grandTotal').textContent     = `$${grand.toFixed(2)}`;
     }
 
     renderOpponents() {
@@ -271,8 +336,15 @@ class BisswizGame {
             const player = this.players[i];
             const isCurrent = this.playingPhase && this.currentPlayer === i;
             const safeName = this.escapeHTML(player.name);
+    // ── Passive streams render ────────────────────────────────────────────────
+
+    _renderPassiveStreams() {
+        const container = document.getElementById('passiveStreams');
+        container.innerHTML = '';
+        PASSIVE_STREAMS.forEach(stream => {
+            const rate = (stream.baseRate * this._multiplier()).toFixed(3);
             const div = document.createElement('div');
-            div.className = 'opponent-area';
+            div.className = 'fc-stream-row';
             div.innerHTML = `
                 <div class="opponent-name${isCurrent ? ' active' : ''}">
                     ${safeName}${isCurrent ? ' ▶' : ''}
@@ -283,105 +355,131 @@ class BisswizGame {
                 <div class="opponent-stats">
                     💰 ${player.credits} credits &nbsp;|&nbsp; 🃏 ${player.hand.length} cards
                 </div>
+                <span class="fc-stream-name">${stream.name}</span>
+                <span class="fc-stream-rate">+$${rate}/hr</span>
+                <span class="fc-badge fc-badge-green fc-badge-xs">AUTO</span>
             `;
-            area.appendChild(div);
-        }
-    }
-
-    renderTrickArea() {
-        const area = document.getElementById('trickArea');
-        area.innerHTML = '';
-        this.currentTrick.forEach(({ playerIndex, card }) => {
-            const el = this.makeCardElement(card);
-            el.classList.add('played');
-            const label = document.createElement('span');
-            label.className = 'player-label';
-            label.textContent = this.players[playerIndex].name;
-            el.appendChild(label);
-            area.appendChild(el);
+            container.appendChild(div);
         });
-
-        const pot = this.bets.reduce((a, b) => a + b, 0);
-        document.getElementById('roundInfo').innerHTML = `
-            <div>Round ${this.roundNumber} &nbsp;|&nbsp; 💰 Pot: ${pot} credits</div>
-            <div>${this.players.map(p => `${p.name}: ${p.tricksWon} tricks`).join(' &nbsp;|&nbsp; ')}</div>
-        `;
     }
 
-    makeCardElement(card) {
-        const el = document.createElement('div');
-        el.className = `card ${IS_RED[card.suit] ? 'red' : 'black'}`;
-        el.innerHTML = `<span class="c-rank">${card.rank}</span><span class="c-suit">${card.suit}</span>`;
-        return el;
-    }
+    // ── Affiliate list render ─────────────────────────────────────────────────
 
-    updateScoreboard() {
-        const display = document.getElementById('scoreDisplay');
-        display.innerHTML = '';
-        this.teams.forEach((team, i) => {
-            const score = this.teamScores[i];
-            const progress = Math.min(100, (score / TARGET_SCORE) * 100);
+    _renderAffiliateList() {
+        const container = document.getElementById('affiliateList');
+        container.innerHTML = '';
+        AFFILIATE_PROGRAMS.forEach(prog => {
+            const rate = (prog.baseRate * this._multiplier()).toFixed(3);
             const div = document.createElement('div');
-            div.className = 'score-row';
+            div.className = 'fc-affiliate-row';
             div.innerHTML = `
                 <div class="team-name">${this.escapeHTML(this.teamName(i))}</div>
                 <div class="score-bar-container"><div class="score-bar" style="width:${progress}%"></div></div>
                 <div class="score-value">${score} / 500</div>
+                <div class="fc-affiliate-info">
+                    <span class="fc-affiliate-name">${prog.name}</span>
+                    <span class="fc-affiliate-prog">${prog.program}</span>
+                </div>
+                <div class="fc-affiliate-right">
+                    <span class="fc-stream-rate">+$${rate}/hr</span>
+                    <a href="${prog.url}" target="_blank" rel="noopener noreferrer" class="fc-link">Visit →</a>
+                </div>
             `;
-            display.appendChild(div);
+            container.appendChild(div);
         });
     }
 
-    updatePlayerInfo() {
-        const p = this.players[0];
-        document.getElementById('playerNameDisplay').textContent = p.name;
-        document.getElementById('playerCreditsDisplay').textContent = `💰 ${p.credits} credits`;
+    // ── Jobs ──────────────────────────────────────────────────────────────────
+
+    _generateJobs(count = REMOTE_JOB_TEMPLATES.length) {
+        const templates = [...REMOTE_JOB_TEMPLATES].sort(() => Math.random() - 0.5).slice(0, count);
+        templates.forEach(tpl => {
+            this.jobs.push({
+                id:       Date.now() + Math.random(),
+                title:    tpl.title,
+                company:  tpl.company,
+                pay:      tpl.pay,
+                skills:   tpl.skills,
+                status:   'available',
+                progress: 0,
+            });
+        });
     }
 
-    // ── Game logic ────────────────────────────────────────────────────────────
+    _renderJobs() {
+        const board = document.getElementById('jobBoard');
+        board.innerHTML = '';
+        const filtered = this.activeFilter === 'all'
+            ? this.jobs
+            : this.jobs.filter(j => j.status === this.activeFilter);
 
-    isCardPlayable(card, hand) {
-        if (this.currentTrick.length === 0) return true;
-        const ledSuit = this.currentTrick[0].card.suit;
-        const hasSuit = hand.some(c => c.suit === ledSuit);
-        return hasSuit ? card.suit === ledSuit : true;
-    }
-
-    humanPlayCard(cardIndex) {
-        if (!this.playingPhase || this.currentPlayer !== 0) return;
-        const player = this.players[0];
-        if (!this.isCardPlayable(player.hand[cardIndex], player.hand)) return;
-        this.playCard(0, cardIndex);
-    }
-
-    cpuPlayCard() {
-        if (!this.playingPhase) return;
-        const idx = this.currentPlayer;
-        const player = this.players[idx];
-        const playable = player.hand
-            .map((card, i) => ({ card, i }))
-            .filter(({ card }) => this.isCardPlayable(card, player.hand));
-
-        // Simple AI: always play the highest available playable card
-        playable.sort((a, b) => RANK_ORDER[b.card.rank] - RANK_ORDER[a.card.rank]);
-        this.playCard(idx, playable[0].i);
-    }
-
-    playCard(playerIndex, cardIndex) {
-        const player = this.players[playerIndex];
-        const card = player.hand.splice(cardIndex, 1)[0];
-        this.currentTrick.push({ playerIndex, card });
-        this.renderGame();
-
-        if (this.currentTrick.length === this.players.length) {
-            setTimeout(() => this.resolveTrick(), 1000);
-        } else {
-            this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
-            this.renderGame();
-            if (!this.players[this.currentPlayer].isHuman) {
-                setTimeout(() => this.cpuPlayCard(), 800);
-            }
+        if (filtered.length === 0) {
+            board.innerHTML = '<p class="fc-empty">No jobs found. Click "Scan for New Jobs" to fetch more.</p>';
+            return;
         }
+
+        filtered.forEach(job => {
+            const card = document.createElement('div');
+            card.className = `fc-job-card fc-job-${job.status}`;
+            card.innerHTML = `
+                <div class="fc-job-header">
+                    <div>
+                        <div class="fc-job-title">${job.title}</div>
+                        <div class="fc-job-company">${job.company}</div>
+                    </div>
+                    <div class="fc-job-pay">$${job.pay}/hr</div>
+                </div>
+                <div class="fc-job-skills">
+                    ${job.skills.map(s => `<span class="fc-skill-tag">${s}</span>`).join('')}
+                </div>
+                ${job.status === 'in-progress' ? `
+                    <div class="fc-job-progress-wrap">
+                        <div class="fc-progress-bar-wrap"><div class="fc-progress-bar fc-progress-anim" id="jp-${job.id}" style="width:${job.progress}%"></div></div>
+                        <span class="fc-job-prog-label">Phu AI working… ${Math.round(job.progress)}%</span>
+                    </div>` : ''}
+                <div class="fc-job-footer">
+                    <span class="fc-job-status-badge fc-badge fc-badge-${this._statusColor(job.status)}">${job.status.replace('-', ' ').toUpperCase()}</span>
+                    ${job.status === 'available'
+                        ? `<button class="fc-btn fc-btn-primary fc-btn-sm" data-job-id="${job.id}">🤖 Work with Phu AI</button>`
+                        : job.status === 'completed'
+                            ? `<span class="fc-job-earned">+$${(job.pay * (JOB_WORK_DURATION_MS / 3600000)).toFixed(2)} earned</span>`
+                            : ''}
+                </div>
+            `;
+            board.appendChild(card);
+        });
+
+        // Bind "Work" buttons
+        board.querySelectorAll('[data-job-id]').forEach(btn => {
+            btn.addEventListener('click', () => this._startJob(btn.dataset.jobId));
+        });
+    }
+
+    _startJob(jobId) {
+        const job = this.jobs.find(j => String(j.id) === String(jobId));
+        if (!job || job.status !== 'available') return;
+        job.status   = 'in-progress';
+        job.progress = 0;
+        this._renderJobs();
+        this._log(`🤖 Phu AI started working on "${job.title}" at ${job.company} ($${job.pay}/hr).`);
+        this._toast(`🤖 Phu AI is now working: ${job.title}`);
+
+        const interval = setInterval(() => {
+            job.progress = Math.min(100, job.progress + (100 / (JOB_WORK_DURATION_MS / 200)));
+            const bar = document.getElementById(`jp-${job.id}`);
+            if (bar) bar.style.width = `${job.progress}%`;
+            if (job.progress >= 100) {
+                clearInterval(interval);
+                job.status = 'completed';
+                const earned = job.pay * (JOB_WORK_DURATION_MS / 3600000);
+                this.jobsDone++;
+                this.jobsEarned += earned;
+                this._updateStats();
+                this._renderJobs();
+                this._log(`✅ Job completed: "${job.title}". Earned $${earned.toFixed(2)}.`);
+                this._toast(`✅ Job done! Earned $${earned.toFixed(2)} from ${job.company}`);
+            }
+        }, 200);
     }
 
     resolveTrick() {
@@ -416,59 +514,64 @@ class BisswizGame {
         this.trickLeader = winnerPlayerIndex;
         this.currentPlayer = winnerPlayerIndex;
         this.currentTrick = [];
-
-        if (this.players[0].hand.length === 0) {
-            setTimeout(() => this.endRound(), 1200);
-        } else {
-            setTimeout(() => {
-                this.renderGame();
-                if (!this.players[this.currentPlayer].isHuman) {
-                    setTimeout(() => this.cpuPlayCard(), 800);
-                }
-            }, 1200);
-        }
+    _statusColor(status) {
+        return status === 'available' ? 'blue' : status === 'in-progress' ? 'yellow' : 'green';
     }
 
-    endRound() {
-        // Add round points to team scores
-        this.teams.forEach((team, i) => {
-            const pts = team.reduce((s, pi) => s + this.players[pi].pointsWon, 0);
-            this.teamScores[i] += pts;
-        });
+    // ── Optimizer stats & canvas ──────────────────────────────────────────────
 
-        // Determine which team won this round (most points)
-        let roundWinner = 0;
-        let maxPts = -1;
-        this.teams.forEach((team, i) => {
-            const pts = team.reduce((s, pi) => s + this.players[pi].pointsWon, 0);
-            if (pts > maxPts) { maxPts = pts; roundWinner = i; }
-        });
+    _renderOptStats() {
+        const m = this._multiplier();
+        const hrPassive   = (this._passiveRatePerSec() * 3600).toFixed(2);
+        const hrAffiliate = (this._affiliateRatePerSec() * 3600).toFixed(2);
+        document.getElementById('optStats').innerHTML = `
+            <div class="fc-opt-stat-row"><span>Level</span><strong>${this.optimizerLevel} / 81</strong></div>
+            <div class="fc-opt-stat-row"><span>Mode</span><strong>${this.optMode.charAt(0).toUpperCase() + this.optMode.slice(1)}</strong></div>
+            <div class="fc-opt-stat-row"><span>Quantum Boost</span><strong>${this.quantumBoost ? '✅ ON' : '❌ OFF'}</strong></div>
+            <div class="fc-opt-stat-row"><span>Multiplier</span><strong>${m.toFixed(2)}×</strong></div>
+            <div class="fc-opt-stat-row"><span>Passive / hr</span><strong>$${hrPassive}</strong></div>
+            <div class="fc-opt-stat-row"><span>Affiliate / hr</span><strong>$${hrAffiliate}</strong></div>
+        `;
+    }
 
-        // Credits transfer: winning team collects all bets (remainder goes to first winner)
-        const pot = this.bets.reduce((a, b) => a + b, 0);
-        this.players.forEach((p, i) => { p.credits -= this.bets[i]; });
-        const winTeam = this.teams[roundWinner];
-        const baseShare = Math.floor(pot / winTeam.length);
-        const remainder = pot - baseShare * winTeam.length;
-        winTeam.forEach((pi, j) => { this.players[pi].credits += baseShare + (j === 0 ? remainder : 0); });
+    _drawCanvas() {
+        const canvas = document.getElementById('optCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
 
-        this.updateScoreboard();
+        // Background
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(0, 0, W, H);
 
-        const summary = this.teams
-            .map((team, i) => {
-                const pts = team.reduce((s, pi) => s + this.players[pi].pointsWon, 0);
-                return `${this.teamName(i)}: ${pts} pts`;
-            })
-            .join(' | ');
-        this.showMessage(`Round ${this.roundNumber} over! ${summary}`);
-
-        // Check win condition
-        const winner = this.teamScores.findIndex(s => s >= TARGET_SCORE);
-        if (winner !== -1) {
-            setTimeout(() => this.endGame(winner), 1500);
-        } else {
-            setTimeout(() => this.startRound(), 2500);
+        // Draw optimization wave
+        const m = this._multiplier();
+        ctx.beginPath();
+        ctx.strokeStyle = this.quantumBoost ? '#a78bfa' : '#34d399';
+        ctx.lineWidth = 2;
+        for (let x = 0; x < W; x++) {
+            const t = (x / W) * Math.PI * 4;
+            const amp = (H / 2) * 0.6 * (this.optimizerLevel / 81);
+            const y = (H / 2) + Math.sin(t + Date.now() / 800) * amp * Math.sin(t / 2 + m);
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
+        ctx.stroke();
+
+        // Particles
+        for (let i = 0; i < 12; i++) {
+            const px = (Math.sin(i * 1.7 + Date.now() / 1200) * 0.5 + 0.5) * W;
+            const py = (Math.cos(i * 2.1 + Date.now() / 900)  * 0.5 + 0.5) * H;
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2);
+            ctx.fillStyle = this.quantumBoost ? 'rgba(167,139,250,0.8)' : 'rgba(52,211,153,0.8)';
+            ctx.fill();
+        }
+
+        requestAnimationFrame(() => {
+            const activeTab = document.querySelector('.fc-tab:not(.hidden)');
+            if (activeTab && activeTab.id === 'tab-optimizer') this._drawCanvas();
+        });
     }
 
     endGame(winnerTeamIdx) {
@@ -488,11 +591,24 @@ class BisswizGame {
                     <span>${this.escapeHTML(this.teamName(i))}</span>
                     <span>${score} pts</span>
                     <span>💰 ${this.teams[i].map(pi => this.players[pi].credits).join(' / ')} credits</span>
-                </div>
-            `).join('')}
-        `;
+    // ── Blog ──────────────────────────────────────────────────────────────────
 
-        winScreen.classList.remove('hidden');
+    _populateBlog() {
+        const grid = document.getElementById('blogFeed');
+        BLOG_POSTS.forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'fc-blog-card';
+            card.innerHTML = `
+                <div class="fc-blog-img">${post.img}</div>
+                <div class="fc-blog-body">
+                    <span class="fc-badge fc-badge-blue fc-badge-xs">${post.tag}</span>
+                    <h3 class="fc-blog-title">${post.title}</h3>
+                    <div class="fc-blog-date">${post.date}</div>
+                    <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-link">Read more →</a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -563,14 +679,25 @@ class BisswizGame {
         document.getElementById('paymentModal').classList.add('hidden');
         const methodLabel = { card: 'Card', paypal: 'PayPal', crypto: 'Crypto', bank: 'Bank Transfer', mobile: 'Mobile Pay', cash: 'Cash' }[method] || method;
         this.showMessage(`✅ +${amount} credits added via ${methodLabel}!`);
+    // ── Utilities ─────────────────────────────────────────────────────────────
+
+    _log(msg) {
+        const log = document.getElementById('activityLog');
+        const time = new Date().toLocaleTimeString();
+        const row = document.createElement('div');
+        row.className = 'fc-log-row';
+        row.innerHTML = `<span class="fc-log-time">${time}</span><span>${msg}</span>`;
+        log.prepend(row);
+        // Keep log manageable
+        while (log.children.length > 80) log.removeChild(log.lastChild);
     }
 
-    showMessage(msg) {
-        const el = document.getElementById('gameMessage');
+    _toast(msg) {
+        const el = document.getElementById('fcToast');
         el.textContent = msg;
         el.classList.add('show');
-        clearTimeout(this._msgTimer);
-        this._msgTimer = setTimeout(() => el.classList.remove('show'), 3000);
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
     }
 
     teamName(teamIndex) {
@@ -578,5 +705,7 @@ class BisswizGame {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => { new BisswizGame(); });
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+
+window.addEventListener('DOMContentLoaded', () => { new FastcashApp(); });
 

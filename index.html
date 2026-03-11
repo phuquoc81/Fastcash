@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bisswiz - Card Game</title>
+    <title>Fastcash — Passive & Affiliate Income · Remote Jobs by Phu AI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Setup Screen -->
-    <div id="setupScreen" class="screen">
-        <div class="setup-container">
-            <h1>🃏 Bisswiz</h1>
-            <p class="tagline">Card Game · 2–4 Players · First Team to 500 Points Wins!</p>
-
-            <div class="setup-section">
-                <label>Number of Players:</label>
-                <div class="player-count-btns">
-                    <button class="count-btn active" data-count="2">2 Players</button>
-                    <button class="count-btn" data-count="3">3 Players</button>
-                    <button class="count-btn" data-count="4">4 Players</button>
-                </div>
+    <!-- Header -->
+    <header class="fc-header">
+        <div class="fc-header-inner">
+            <div class="fc-logo">
+                <span class="fc-logo-icon">⚡</span>
+                <span class="fc-logo-text">Fastcash</span>
             </div>
+            <nav class="fc-nav">
+                <button class="fc-nav-btn active" data-tab="dashboard">📊 Dashboard</button>
+                <button class="fc-nav-btn" data-tab="jobs">🤖 Remote Jobs</button>
+                <button class="fc-nav-btn" data-tab="optimizer">⚙️ Phuoptimizer 81</button>
+                <button class="fc-nav-btn" data-tab="blog">📰 phubers.blog</button>
+            </nav>
+        </div>
+    </header>
 
-            <div id="playerSetup" class="setup-section"></div>
+    <!-- Toast notification -->
+    <div id="fcToast" class="fc-toast"></div>
 
-            <div class="setup-section">
-                <label>Starting Credits:</label>
-                <input type="number" id="startingCredits" value="500" min="100" max="9999" class="credits-input">
-            </div>
+    <!-- ── DASHBOARD TAB ─────────────────────────────────────────────────── -->
+    <section id="tab-dashboard" class="fc-tab active">
 
             <button id="startGameBtn" class="btn-primary">🎮 Start Game</button>
             <button id="jobsBoardBtn" class="btn-secondary">💼 Browse Global Jobs</button>
@@ -54,42 +54,171 @@
                 <div class="center-area">
                     <div id="trickArea" class="trick-area"></div>
                     <div id="roundInfo" class="round-info"></div>
+        <!-- Hero stats row -->
+        <div class="fc-stats-row">
+            <div class="fc-stat-card" id="statPassive">
+                <div class="fc-stat-icon">💰</div>
+                <div class="fc-stat-body">
+                    <div class="fc-stat-label">Passive Income</div>
+                    <div class="fc-stat-value" id="passiveTotal">$0.00</div>
+                    <div class="fc-stat-rate" id="passiveRate">+$0.00 / hr</div>
                 </div>
+            </div>
+            <div class="fc-stat-card" id="statAffiliate">
+                <div class="fc-stat-icon">🔗</div>
+                <div class="fc-stat-body">
+                    <div class="fc-stat-label">Affiliate Income</div>
+                    <div class="fc-stat-value" id="affiliateTotal">$0.00</div>
+                    <div class="fc-stat-rate" id="affiliateRate">+$0.00 / hr</div>
+                </div>
+            </div>
+            <div class="fc-stat-card" id="statJobs">
+                <div class="fc-stat-icon">💼</div>
+                <div class="fc-stat-body">
+                    <div class="fc-stat-label">Jobs Completed</div>
+                    <div class="fc-stat-value" id="jobsDone">0</div>
+                    <div class="fc-stat-rate" id="jobsEarned">$0.00 earned</div>
+                </div>
+            </div>
+            <div class="fc-stat-card fc-stat-total">
+                <div class="fc-stat-icon">🏆</div>
+                <div class="fc-stat-body">
+                    <div class="fc-stat-label">Total Earnings</div>
+                    <div class="fc-stat-value" id="grandTotal">$0.00</div>
+                    <div class="fc-stat-rate">All sources combined</div>
+                </div>
+            </div>
+        </div>
 
                 <div class="player-area">
                     <div class="player-info">
                         <span id="playerNameDisplay" class="player-name"></span>
                         <span id="playerCreditsDisplay" class="player-credits"></span>
                         <button id="topUpBtn" class="btn-topup">💳 Buy Credits</button>
-                    </div>
-                    <div id="playerHand" class="card-hand"></div>
+        <div class="fc-two-col">
+
+            <!-- Passive Income Engine -->
+            <div class="fc-panel">
+                <div class="fc-panel-header">
+                    <h2>💰 Passive Income Engine</h2>
+                    <span class="fc-badge fc-badge-green" id="passiveBadge">RUNNING</span>
                 </div>
+                <p class="fc-panel-desc">Phu AI automatically generates passive income streams on your behalf. Powered by Phuoptimizer 81.</p>
+                <div class="fc-progress-block">
+                    <div class="fc-progress-label">
+                        <span>Optimizer Level</span>
+                        <span id="passiveOptLevel">81</span>
+                    </div>
+                    <div class="fc-progress-bar-wrap"><div class="fc-progress-bar" id="passiveOptBar" style="width:100%"></div></div>
+                </div>
+                <div class="fc-income-streams" id="passiveStreams"></div>
+                <button class="fc-btn fc-btn-primary" id="boostPassiveBtn">⚡ Boost with Phuoptimizer</button>
+            </div>
+
+            <!-- Affiliate Income Engine -->
+            <div class="fc-panel">
+                <div class="fc-panel-header">
+                    <h2>🔗 Affiliate Income Engine</h2>
+                    <span class="fc-badge fc-badge-blue" id="affiliateBadge">ACTIVE</span>
+                </div>
+                <p class="fc-panel-desc">Fastcash automatically promotes and tracks affiliate links through phubers.blog and partner networks.</p>
+                <div class="fc-affiliate-list" id="affiliateList"></div>
+                <button class="fc-btn fc-btn-secondary" id="refreshAffiliateBtn">🔄 Refresh Affiliate Links</button>
             </div>
 
         </div>
 
-        <!-- Betting Panel (modal) -->
-        <div id="bettingPanel" class="modal-overlay hidden">
-            <div class="modal-box">
-                <h3>💰 Place Your Bet</h3>
-                <p id="betRoundLabel">Bet for Round 1:</p>
-                <input type="number" id="betAmount" value="10" min="0" class="bet-input">
-                <button id="placeBetBtn" class="btn-primary">Confirm Bet</button>
+        <!-- Activity Log -->
+        <div class="fc-panel fc-panel-log">
+            <div class="fc-panel-header">
+                <h2>📋 Activity Log</h2>
+                <button class="fc-btn fc-btn-ghost fc-btn-sm" id="clearLogBtn">Clear</button>
+            </div>
+            <div id="activityLog" class="fc-log"></div>
+        </div>
+
+    </section>
+
+    <!-- ── REMOTE JOBS TAB ───────────────────────────────────────────────── -->
+    <section id="tab-jobs" class="fc-tab hidden">
+        <div class="fc-section-header">
+            <div>
+                <h2>🤖 Remote Jobs — Powered by Phu AI</h2>
+                <p class="fc-section-desc">Phu AI scans companies and matches the best remote work opportunities. Jobs are worked automatically using Phuoptimizer 81.</p>
+            </div>
+            <button class="fc-btn fc-btn-primary" id="scanJobsBtn">🔍 Scan for New Jobs</button>
+        </div>
+
+        <div class="fc-job-filters">
+            <button class="fc-filter-btn active" data-filter="all">All</button>
+            <button class="fc-filter-btn" data-filter="available">Available</button>
+            <button class="fc-filter-btn" data-filter="in-progress">In Progress</button>
+            <button class="fc-filter-btn" data-filter="completed">Completed</button>
+        </div>
+
+        <div id="jobBoard" class="fc-job-board"></div>
+    </section>
+
+    <!-- ── PHUOPTIMIZER 81 TAB ────────────────────────────────────────────── -->
+    <section id="tab-optimizer" class="fc-tab hidden">
+        <div class="fc-section-header">
+            <div>
+                <h2>⚙️ Phuoptimizer 81</h2>
+                <p class="fc-section-desc">Control the core optimization engine that powers all Fastcash income streams.</p>
+            </div>
+            <span class="fc-badge fc-badge-green" id="optStatusBadge">ONLINE</span>
+        </div>
+
+        <div class="fc-two-col">
+            <div class="fc-panel">
+                <h3 class="fc-panel-title">Optimization Level</h3>
+                <div class="fc-opt-level-display" id="optLevelDisplay">81</div>
+                <input type="range" id="optLevelSlider" min="1" max="81" value="81" class="fc-slider">
+                <div class="fc-slider-labels"><span>1</span><span>81</span></div>
+                <div class="fc-opt-modes">
+                    <label class="fc-radio-label">
+                        <input type="radio" name="optMode" value="standard"> Standard
+                    </label>
+                    <label class="fc-radio-label">
+                        <input type="radio" name="optMode" value="advanced"> Advanced
+                    </label>
+                    <label class="fc-radio-label">
+                        <input type="radio" name="optMode" value="quantum" checked> Quantum ✨
+                    </label>
+                </div>
+                <div class="fc-toggle-row">
+                    <span>Quantum Boost</span>
+                    <label class="fc-toggle">
+                        <input type="checkbox" id="quantumBoostToggle" checked>
+                        <span class="fc-toggle-slider"></span>
+                    </label>
+                </div>
+                <button class="fc-btn fc-btn-primary fc-btn-full" id="applyOptimizerBtn">⚡ Apply Settings</button>
+            </div>
+
+            <div class="fc-panel">
+                <h3 class="fc-panel-title">Optimizer Status</h3>
+                <div id="optStats" class="fc-opt-stats"></div>
+                <canvas id="optCanvas" width="300" height="160" class="fc-canvas"></canvas>
             </div>
         </div>
+    </section>
 
-        <!-- Game message toast -->
-        <div id="gameMessage" class="game-message"></div>
-    </div>
-
-    <!-- Win Screen -->
-    <div id="winScreen" class="screen hidden">
-        <div class="win-container">
-            <div id="winMessage"></div>
-            <div id="finalScores"></div>
-            <button id="playAgainBtn" class="btn-primary">🔄 Play Again</button>
+    <!-- ── PHUBERS.BLOG TAB ──────────────────────────────────────────────── -->
+    <section id="tab-blog" class="fc-tab hidden">
+        <div class="fc-section-header">
+            <div>
+                <h2>📰 phubers.blog</h2>
+                <p class="fc-section-desc">Latest posts from phubers.blog — the content engine behind your affiliate income.</p>
+            </div>
+            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-secondary">🌐 Visit phubers.blog</a>
         </div>
-    </div>
+        <div id="blogFeed" class="fc-blog-grid"></div>
+        <div class="fc-blog-cta">
+            <p>phubers.blog is your affiliate content hub. Every post automatically generates affiliate income through Fastcash.</p>
+            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-primary">📖 Read Full Blog</a>
+        </div>
+    </section>
 
     <!-- Star Moment Overlay -->
     <div id="starMoment" class="star-moment hidden">
