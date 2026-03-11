@@ -40,11 +40,17 @@ Fastcash automatically generates **passive income** and **affiliate income** for
 
 ## Quick Start
 
-1. Open `index.html` in any modern web browser
+1. Open `index.html` in any modern web browser, or run `npm run dev` to serve the static site locally
 2. Income starts accumulating automatically on page load
 3. Use the **Remote Jobs** tab to let Phu AI work jobs for you
 4. Tune **Phuoptimizer 81** to maximize income multiplier
 5. Visit **phubers.blog** tab for affiliate content
+
+### Scripts
+
+- `npm run dev` — start a local static file server on port 8080
+- `npm run build` — verify that no build step is required
+- `npm test` — syntax-check the JavaScript files
 
 ---
 
@@ -68,4 +74,3 @@ Examples:
 ## License
 
 © 2026 Fastcash · Phu AI · Phuoptimizer 81 · phubers.blog
-
