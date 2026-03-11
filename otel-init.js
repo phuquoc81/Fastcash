@@ -15,7 +15,10 @@ function readTelemetryConfig() {
 }
 
 function createTelemetryClient(config) {
-  const enabled = Boolean(config.endpoint && config.apiKey);
+  const hasEndpoint = Boolean(config.endpoint);
+  const hasApiKey = Boolean(config.apiKey);
+  const enabled = hasEndpoint && hasApiKey;
+  const misconfigured = hasEndpoint !== hasApiKey;
 
   function debugLog(message, details) {
     if (config.debug) {
@@ -38,11 +41,6 @@ function createTelemetryClient(config) {
     });
 
     try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: 'application/json' });
-        return navigator.sendBeacon(config.endpoint, blob);
-      }
-
       await fetch(config.endpoint, {
         method: 'POST',
         headers: {
@@ -54,13 +52,14 @@ function createTelemetryClient(config) {
       });
       return true;
     } catch (error) {
-      console.warn('Fastcash telemetry send failed.', error);
+      console.warn('FastCash telemetry send failed.', error);
       return false;
     }
   }
 
   return {
     enabled,
+    misconfigured,
     track(eventName, attributes) {
       debugLog(`[Telemetry] ${eventName}`, attributes);
       return send(eventName, attributes);
@@ -83,8 +82,10 @@ if (typeof window !== 'undefined') {
 
 if (telemetryClient.enabled) {
   telemetryClient.track('app.init');
+} else if (telemetryClient.misconfigured) {
+  console.warn('FastCash telemetry is misconfigured. Set both endpoint and apiKey in window.FASTCASH_TELEMETRY_CONFIG to enable.');
 } else {
-  console.info('Fastcash telemetry is disabled. Set window.FASTCASH_TELEMETRY_CONFIG to enable it.');
+  console.info('FastCash telemetry is disabled. Set window.FASTCASH_TELEMETRY_CONFIG to enable.');
 }
 
 export { telemetryClient };

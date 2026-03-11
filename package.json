@@ -1,12 +1,12 @@
 {
   "name": "fastcash",
   "version": "1.0.0",
-  "description": "Fastcash static web application",
+  "description": "FastCash static web application",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 8080",
     "build": "echo 'Static site - no build needed'",
-    "test": "node --check script.js && node --check otel-init.js && node --check otel-utils.js"
+    "test": "node --check *.js"
   },
   "dependencies": {},
   "devDependencies": {}

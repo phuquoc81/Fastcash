@@ -1,3 +1,5 @@
+const MAX_STACK_LENGTH = 1000;
+
 function getTelemetryClient() {
   if (typeof window !== 'undefined' && window.fastcashTelemetry) {
     return window.fastcashTelemetry;
@@ -70,7 +72,8 @@ export function trackError(errorName, errorMessage, errorStack = '') {
   return getTelemetryClient().trackError(
     errorName,
     errorMessage,
-    String(errorStack).slice(0, 1000),
+    // Keep telemetry payloads small and avoid leaking oversized stacks.
+    String(errorStack).slice(0, MAX_STACK_LENGTH),
   );
 }
 
