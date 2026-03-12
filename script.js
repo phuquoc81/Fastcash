@@ -309,6 +309,15 @@ class FastcashApp {
             field.textContent = this.upgradePayment[key] || '';
         });
 
+        const stripeButton = document.getElementById('stripeUpgradeBtn');
+        const checkoutUrl = this._validatedStripeCheckoutUrl();
+        if (stripeButton) {
+            stripeButton.textContent = checkoutUrl ? '💳 Pay with Stripe' : '📧 Request Stripe Link';
+            stripeButton.title = checkoutUrl
+                ? 'Open the hosted Stripe checkout for Phu AI Pro.'
+                : 'Open a prefilled email to request the Stripe checkout link.';
+        }
+
         const confirmLink = document.getElementById('confirmUpgradeLink');
         if (confirmLink) confirmLink.href = this._upgradeConfirmationMailto();
     }
@@ -543,6 +552,7 @@ class FastcashApp {
             area.style.left = '-9999px';
             document.body.appendChild(area);
             area.select();
+            // Keep legacy copy support for browsers where Clipboard API access is blocked.
             const copied = document.execCommand('copy');
             document.body.removeChild(area);
             if (!copied) throw new Error('execCommand copy failed');

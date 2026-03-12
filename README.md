@@ -40,6 +40,7 @@ Fastcash automatically generates **passive income** and **affiliate income** for
 - Dashboard payment panel for Phu AI Pro upgrades
 - Stripe checkout action with fallback email request flow
 - Bank e-transfer details for Phu Quoc Nguyen, including email, transit, institution, and account number
+- Payment details are intentionally displayed in the dashboard for manual upgrade requests
 
 ---
 
