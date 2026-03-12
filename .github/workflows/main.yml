@@ -21,7 +21,4 @@ jobs:
           node-version: 20
 
       - name: Validate JavaScript syntax
-        run: |
-          node --check script.js
-          node --check otel-init.js
-          node --check otel-utils.js
+        run: node --check *.js
