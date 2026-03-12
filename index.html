@@ -5,9 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fastcash — Passive & Affiliate Income · Remote Jobs by Phu AI</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "@opentelemetry/api": "https://esm.sh/@opentelemetry/api@1.8.0",
+                "@opentelemetry/core": "https://esm.sh/@opentelemetry/core@1.17.0",
+                "@opentelemetry/exporter-trace-otlp-http": "https://esm.sh/@opentelemetry/exporter-trace-otlp-http@0.45.0",
+                "@opentelemetry/propagator-b3": "https://esm.sh/@opentelemetry/propagator-b3@1.17.0",
+                "@opentelemetry/resources": "https://esm.sh/@opentelemetry/resources@1.17.0",
+                "@opentelemetry/sdk-trace-web": "https://esm.sh/@opentelemetry/sdk-trace-web@1.17.0",
+                "@opentelemetry/semantic-conventions": "https://esm.sh/@opentelemetry/semantic-conventions@1.17.0"
+            }
+        }
+    </script>
     <!-- OpenTelemetry initialization -->
     <script type="module">
-        import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
+        const searchParams = new URLSearchParams(window.location.search);
+        let storedTelemetryPreference = null;
+
+        try {
+            storedTelemetryPreference = window.localStorage.getItem('fastcash.telemetry');
+        } catch (error) {
+            console.warn('Telemetry preference storage is unavailable:', error);
+        }
+
+        const shouldInitTelemetry = searchParams.get('telemetry') === '1'
+            || storedTelemetryPreference === 'enabled';
+
+        if (shouldInitTelemetry) {
+            import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
+        }
     </script>
 </head>
 <body>
@@ -25,6 +52,14 @@
                 <button class="fc-nav-btn" data-tab="optimizer">⚙️ Phuoptimizer 81</button>
                 <button class="fc-nav-btn" data-tab="blog">📰 phubers.blog</button>
             </nav>
+            <a
+                href="https://vercel.com/new/clone?repository-url=https://github.com/phuquoc81/Fastcash&project-name=phu-ai-core&repository-name=Fastcash"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="fc-btn fc-btn-secondary fc-header-cta"
+            >
+                ▲ Launch Phu AI Core on Vercel
+            </a>
         </div>
     </header>
 

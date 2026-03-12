@@ -63,6 +63,11 @@ body {
     flex-wrap: wrap;
 }
 
+.fc-header-cta {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
 .fc-nav-btn {
     background: transparent;
     border: 1px solid transparent;
@@ -738,6 +743,7 @@ body {
 
     .fc-nav { gap: 4px; }
     .fc-nav-btn { padding: 6px 10px; font-size: 0.78em; }
+    .fc-header-cta { margin-left: 0; }
 
     .fc-tab { padding: 16px 16px 40px; }
 
@@ -752,5 +758,4 @@ body {
 @media (max-width: 480px) {
     .fc-stats-row { grid-template-columns: 1fr; }
 }
-
 
