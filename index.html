@@ -21,8 +21,16 @@
     <!-- OpenTelemetry initialization -->
     <script type="module">
         const searchParams = new URLSearchParams(window.location.search);
+        let storedTelemetryPreference = null;
+
+        try {
+            storedTelemetryPreference = window.localStorage.getItem('fastcash.telemetry');
+        } catch (error) {
+            console.warn('Telemetry preference storage is unavailable:', error);
+        }
+
         const shouldInitTelemetry = searchParams.get('telemetry') === '1'
-            || window.localStorage.getItem('fastcash.telemetry') === 'enabled';
+            || storedTelemetryPreference === 'enabled';
 
         if (shouldInitTelemetry) {
             import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
