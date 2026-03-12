@@ -2,6 +2,8 @@
 
 A quantum-powered puzzle and problem solver with advanced AI capabilities.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/phuquoc81/Fastcash&project-name=phu-ai-core&repository-name=Fastcash)
+
 ## Features
 
 ### 🧠 Phu AI Core
@@ -40,6 +42,11 @@ Solves various types of problems including:
 
 ### Opening the Application
 Simply open `index.html` in a modern web browser. No installation or dependencies required.
+
+### Launching Phu AI Core on Vercel
+1. Click **Deploy with Vercel** above, or use the in-app **▲ Launch Phu AI Core on Vercel** button.
+2. Import the `phuquoc81/Fastcash` repository into Vercel.
+3. Keep the default static-site settings and deploy.
 
 ### Using the Puzzle Solver
 

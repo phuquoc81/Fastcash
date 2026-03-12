@@ -7,6 +7,10 @@ import { W3CTraceContextPropagator } from '@opentelemetry/core';
 import { CompositePropagator, HttpTraceContextPropagator, HttpBaggagePropagator } from '@opentelemetry/core';
 import { B3Propagator } from '@opentelemetry/propagator-b3';
 
+const runtimeEnv = typeof globalThis.process !== 'undefined' && globalThis.process?.env
+  ? globalThis.process.env
+  : {};
+
 // Create a resource to identify this service
 const resource = Resource.default().merge(
   new Resource({
@@ -22,7 +26,7 @@ const tracerProvider = new BasicTracerProvider({ resource });
 const otlpExporter = new OTLPTraceExporter({
   url: 'https://ingest.kubiks.app/v1/traces',
   headers: {
-    'x-kubiks-key': process.env.REACT_APP_KUBIKS_KEY || 'kubiks_c71a0c0b7664f11a0aa477f86d4840a909ae805d8f83059f977fe92aadbcb540',
+    'x-kubiks-key': runtimeEnv.REACT_APP_KUBIKS_KEY || 'kubiks_c71a0c0b7664f11a0aa477f86d4840a909ae805d8f83059f977fe92aadbcb540',
   },
 });
 
@@ -30,7 +34,7 @@ const otlpExporter = new OTLPTraceExporter({
 tracerProvider.addSpanProcessor(new SimpleSpanProcessor(otlpExporter));
 
 // Optional: Add console exporter for debugging (remove in production)
-if (process.env.NODE_ENV !== 'production') {
+if (runtimeEnv.NODE_ENV !== 'production') {
   tracerProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
 }
 

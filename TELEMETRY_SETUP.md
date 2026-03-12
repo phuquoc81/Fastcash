@@ -32,7 +32,9 @@ OTEL_SERVICE_NAME=fastcash-web
 
 ### 3. Verify Setup
 
-Open your browser console and you should see:
+For static launches (including Vercel), telemetry is opt-in. Enable it by opening the app with `?telemetry=1` or by running `localStorage.setItem('fastcash.telemetry', 'enabled')` before reloading.
+
+Open your browser console and you should then see:
 ```
 OpenTelemetry initialized for FastCash
 ```
@@ -160,4 +162,3 @@ window.addEventListener('load', () => {
 - [Kubiks Documentation](https://docs.kubiks.ai)
 - [OpenTelemetry JS Documentation](https://opentelemetry.io/docs/instrumentation/js/)
 - [OTLP Protocol](https://opentelemetry.io/docs/specs/otlp/)
-
