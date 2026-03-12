@@ -228,6 +228,62 @@ body {
     margin-top: 0;
 }
 
+.fc-upgrade-panel {
+    margin-bottom: 20px;
+}
+
+.fc-upgrade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.fc-upgrade-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.fc-upgrade-copy {
+    color: #94a3b8;
+    font-size: 0.85em;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.fc-payment-details {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.fc-payment-details div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fc-payment-details dt {
+    color: #64748b;
+    font-size: 0.8em;
+}
+
+.fc-payment-details dd {
+    color: #e2e8f0;
+    font-size: 0.88em;
+    font-weight: 700;
+    text-align: right;
+}
+
+.fc-upgrade-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 /* ── Badges ───────────────────────────────────────────────────────────────── */
 
 .fc-badge {
@@ -752,5 +808,4 @@ body {
 @media (max-width: 480px) {
     .fc-stats-row { grid-template-columns: 1fr; }
 }
-
 
