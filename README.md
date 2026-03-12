@@ -1,5 +1,7 @@
 # Fastcash
 
+[![Actions Status](https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml/badge.svg)](https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml)
+
 ## ⚡ Passive & Affiliate Income · Remote Jobs by Phu AI
 
 Fastcash automatically generates **passive income** and **affiliate income** for users, and gathers **remote job opportunities** that are worked on automatically using **Phu AI**, **Phuoptimizer 81**, and **[phubers.blog](https://phubers.blog)**.
@@ -68,4 +70,3 @@ Examples:
 ## License
 
 © 2026 Fastcash · Phu AI · Phuoptimizer 81 · phubers.blog
-
