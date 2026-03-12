@@ -1,8 +1,40 @@
-create trap
-[{1981}]
-<Phu Quoc Nguyen 43821 004 6369582 anhvankiet81@gmail.com>
-8.99$ 
-add apps future fix 
-add text coding script 
-version 4584 into the future
-add trap pyramid golden with green light
+name: Main
+
+on:
+  push:
+    branches: ["Main"]
+  pull_request:
+    branches: ["Main"]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript syntax
+        run: |
+          shopt -s nullglob
+          files=( *.js )
+
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No root-level JavaScript files found to validate."
+            exit 0
+          fi
+
+          for file in "${files[@]}"; do
+            node --check "$file"
+          done
+
+      - name: Build static site
+        run: npm run build
