@@ -40,11 +40,13 @@ const BLOG_POSTS = [
 
 const TICK_INTERVAL_MS = 1000;   // earn every second
 const JOB_WORK_DURATION_MS = 8000; // 8 s to simulate working a job
+const STRIPE_ALLOWED_HOSTS = new Set(['buy.stripe.com', 'checkout.stripe.com']);
 
 // ── Fastcash App ─────────────────────────────────────────────────────────────
 
 class FastcashApp {
     constructor() {
+        const config = document.getElementById('fcAppConfig');
         this.passiveTotal   = 0;
         this.affiliateTotal = 0;
         this.jobsEarned     = 0;
@@ -55,6 +57,15 @@ class FastcashApp {
         this.jobs           = [];
         this.activeFilter   = 'all';
         this.tickCount      = 0;
+        this.upgradePayment = {
+            stripeCheckoutUrl: config?.dataset.stripeCheckoutUrl || '',
+            stripeRequestEmail: config?.dataset.stripeRequestEmail || 'anhvankiet81@gmail.com',
+            recipientName: config?.dataset.upgradeRecipient || 'Phu Quoc Nguyen',
+            etransferEmail: config?.dataset.etransferEmail || 'anhvankiet81@gmail.com',
+            bankTransit: config?.dataset.bankTransit || '43821',
+            bankInstitution: config?.dataset.bankInstitution || '004',
+            bankAccount: config?.dataset.bankAccount || '6369582',
+        };
 
         this._bindNav();
         this._bindDashboard();
@@ -72,6 +83,7 @@ class FastcashApp {
         this._log('⚡ Fastcash started. Phu AI is working for you automatically.');
         this._log('🔗 Affiliate links active via phubers.blog and partner network.');
         this._log('⚙️ Phuoptimizer 81 initialized at maximum level.');
+        this._log('⬆️ Phu AI Pro upgrade options are ready: Stripe request and bank e-transfer.');
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -109,6 +121,35 @@ class FastcashApp {
 
         document.getElementById('clearLogBtn').addEventListener('click', () => {
             document.getElementById('activityLog').innerHTML = '';
+        });
+
+        document.getElementById('stripeUpgradeBtn').addEventListener('click', () => {
+            const checkoutUrl = this._validatedStripeCheckoutUrl();
+            if (checkoutUrl) {
+                window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+                this._toast('💳 Opening Stripe checkout for Phu AI Pro.');
+                this._log(`💳 Stripe checkout opened for ${this.upgradePayment.recipientName}.`);
+                return;
+            }
+
+            window.location.href = this._stripeRequestMailto();
+            this._toast('📧 Stripe checkout request opened in your email app.');
+            this._log(`📧 Stripe checkout request prepared for ${this.upgradePayment.stripeRequestEmail}.`);
+        });
+
+        document.getElementById('copyStripeEmailBtn').addEventListener('click', () => {
+            this._copyText(this.upgradePayment.stripeRequestEmail, '📧 Stripe contact email copied.');
+        });
+
+        document.getElementById('copyEtransferBtn').addEventListener('click', () => {
+            const details = [
+                `Recipient: ${this.upgradePayment.recipientName}`,
+                `Email: ${this.upgradePayment.etransferEmail}`,
+                `Transit: ${this.upgradePayment.bankTransit}`,
+                `Institution: ${this.upgradePayment.bankInstitution}`,
+                `Account: ${this.upgradePayment.bankAccount}`,
+            ].join('\n');
+            this._copyText(details, '📋 e-Transfer details copied.');
         });
     }
 
@@ -454,9 +495,56 @@ class FastcashApp {
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
     }
+
+    _validatedStripeCheckoutUrl() {
+        if (!this.upgradePayment.stripeCheckoutUrl) return '';
+
+        try {
+            const url = new URL(this.upgradePayment.stripeCheckoutUrl);
+            return url.protocol === 'https:' && STRIPE_ALLOWED_HOSTS.has(url.host) ? url.toString() : '';
+        } catch {
+            return '';
+        }
+    }
+
+    _stripeRequestMailto() {
+        const subject = encodeURIComponent('Phu AI Pro upgrade via Stripe');
+        const body = encodeURIComponent(
+            `Hi ${this.upgradePayment.recipientName},\n\nI want to upgrade to Phu AI Pro and pay with Stripe. Please send me the Stripe checkout link.\n`
+        );
+        return `mailto:${this.upgradePayment.stripeRequestEmail}?subject=${subject}&body=${body}`;
+    }
+
+    _copyText(text, successMessage) {
+        const fallback = () => {
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.setAttribute('readonly', '');
+            area.style.position = 'absolute';
+            area.style.left = '-9999px';
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand('copy');
+            document.body.removeChild(area);
+        };
+
+        const copyAction = navigator.clipboard?.writeText
+            ? navigator.clipboard.writeText(text)
+            : Promise.resolve().then(fallback);
+
+        copyAction
+            .then(() => {
+                this._toast(successMessage);
+                this._log(successMessage);
+            })
+            .catch(() => {
+                fallback();
+                this._toast(successMessage);
+                this._log(successMessage);
+            });
+    }
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
 window.addEventListener('DOMContentLoaded', () => { new FastcashApp(); });
-

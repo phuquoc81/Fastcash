@@ -36,6 +36,11 @@ Fastcash automatically generates **passive income** and **affiliate income** for
 - Every post drives affiliate income through the Fastcash network
 - Direct link to [phubers.blog](https://phubers.blog)
 
+### ⬆️ Phu AI Pro Upgrade Payments
+- Dashboard payment panel for Phu AI Pro upgrades
+- Stripe checkout action with fallback email request flow
+- Bank e-transfer details for Phu Quoc Nguyen, including email, transit, institution, and account number
+
 ---
 
 ## Quick Start
@@ -45,6 +50,7 @@ Fastcash automatically generates **passive income** and **affiliate income** for
 3. Use the **Remote Jobs** tab to let Phu AI work jobs for you
 4. Tune **Phuoptimizer 81** to maximize income multiplier
 5. Visit **phubers.blog** tab for affiliate content
+6. Use the **Upgrade to Phu AI Pro** panel on the dashboard to pay with Stripe or by bank e-transfer
 
 ---
 
@@ -68,4 +74,3 @@ Examples:
 ## License
 
 © 2026 Fastcash · Phu AI · Phuoptimizer 81 · phubers.blog
-
