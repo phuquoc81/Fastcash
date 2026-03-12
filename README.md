@@ -1,3 +1,5 @@
+<a href="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml"><img src="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml/badge.svg"></a>
+
 # Fastcash
 
 ## ⚡ Passive & Affiliate Income · Remote Jobs by Phu AI
@@ -68,4 +70,3 @@ Examples:
 ## License
 
 © 2026 Fastcash · Phu AI · Phuoptimizer 81 · phubers.blog
-
