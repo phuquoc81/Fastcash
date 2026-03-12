@@ -1,6 +1,6 @@
 # Fastcash
 
-<a href="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml"><img src="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml/badge.svg"></a>
+<a href="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml"><img src="https://github.com/phuquoc81/Fastcash/actions/workflows/main.yml/badge.svg?branch=Main" alt="Main workflow status"></a>
 
 ## ⚡ Passive & Affiliate Income · Remote Jobs by Phu AI
 
