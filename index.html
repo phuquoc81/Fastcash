@@ -11,6 +11,7 @@
     </script>
 </head>
 <body>
+    <!-- Set data-stripe-checkout-url to a valid hosted Stripe checkout or payment link when available. -->
     <div id="fcAppConfig"
          data-stripe-checkout-url=""
          data-stripe-request-email="anhvankiet81@gmail.com"
@@ -134,15 +135,15 @@
                     <h3 class="fc-panel-title">🏦 Bank e-Transfer</h3>
                     <p class="fc-upgrade-copy">Send your transfer to the account below, then confirm the payment so Phu AI Pro can be activated.</p>
                     <dl class="fc-payment-details">
-                        <div><dt>Recipient</dt><dd>Phu Quoc Nguyen</dd></div>
-                        <div><dt>Email</dt><dd>anhvankiet81@gmail.com</dd></div>
-                        <div><dt>Transit</dt><dd>43821</dd></div>
-                        <div><dt>Institution</dt><dd>004</dd></div>
-                        <div><dt>Account</dt><dd>6369582</dd></div>
+                        <div><dt>Recipient</dt><dd data-upgrade-field="recipientName"></dd></div>
+                        <div><dt>Email</dt><dd data-upgrade-field="etransferEmail"></dd></div>
+                        <div><dt>Transit</dt><dd data-upgrade-field="bankTransit"></dd></div>
+                        <div><dt>Institution</dt><dd data-upgrade-field="bankInstitution"></dd></div>
+                        <div><dt>Account</dt><dd data-upgrade-field="bankAccount"></dd></div>
                     </dl>
                     <div class="fc-upgrade-actions">
                         <button class="fc-btn fc-btn-secondary" id="copyEtransferBtn">📋 Copy e-Transfer Details</button>
-                        <a href="mailto:anhvankiet81@gmail.com?subject=Phu%20AI%20Pro%20upgrade%20payment%20confirmation&body=Hi%20Phu%20Quoc%20Nguyen%2C%0A%0AI%20sent%20my%20Phu%20AI%20Pro%20upgrade%20payment.%20Please%20activate%20my%20upgrade.%0A" class="fc-btn fc-btn-ghost">✉️ Confirm Upgrade</a>
+                        <a href="#" class="fc-btn fc-btn-ghost" id="confirmUpgradeLink">✉️ Confirm Upgrade</a>
                     </div>
                 </div>
             </div>

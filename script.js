@@ -59,18 +59,19 @@ class FastcashApp {
         this.tickCount      = 0;
         this.upgradePayment = {
             stripeCheckoutUrl: config?.dataset.stripeCheckoutUrl || '',
-            stripeRequestEmail: config?.dataset.stripeRequestEmail || 'anhvankiet81@gmail.com',
-            recipientName: config?.dataset.upgradeRecipient || 'Phu Quoc Nguyen',
-            etransferEmail: config?.dataset.etransferEmail || 'anhvankiet81@gmail.com',
-            bankTransit: config?.dataset.bankTransit || '43821',
-            bankInstitution: config?.dataset.bankInstitution || '004',
-            bankAccount: config?.dataset.bankAccount || '6369582',
+            stripeRequestEmail: config?.dataset.stripeRequestEmail || '',
+            recipientName: config?.dataset.upgradeRecipient || '',
+            etransferEmail: config?.dataset.etransferEmail || '',
+            bankTransit: config?.dataset.bankTransit || '',
+            bankInstitution: config?.dataset.bankInstitution || '',
+            bankAccount: config?.dataset.bankAccount || '',
         };
 
         this._bindNav();
         this._bindDashboard();
         this._bindJobsTab();
         this._bindOptimizerTab();
+        this._renderUpgradePayment();
         this._populateBlog();
         this._generateJobs();
         this._renderJobs();
@@ -302,6 +303,16 @@ class FastcashApp {
         });
     }
 
+    _renderUpgradePayment() {
+        document.querySelectorAll('[data-upgrade-field]').forEach(field => {
+            const key = field.dataset.upgradeField;
+            field.textContent = this.upgradePayment[key] || '';
+        });
+
+        const confirmLink = document.getElementById('confirmUpgradeLink');
+        if (confirmLink) confirmLink.href = this._upgradeConfirmationMailto();
+    }
+
     // ── Jobs ──────────────────────────────────────────────────────────────────
 
     _generateJobs(count = REMOTE_JOB_TEMPLATES.length) {
@@ -515,6 +526,14 @@ class FastcashApp {
         return `mailto:${this.upgradePayment.stripeRequestEmail}?subject=${subject}&body=${body}`;
     }
 
+    _upgradeConfirmationMailto() {
+        const subject = encodeURIComponent('Phu AI Pro upgrade payment confirmation');
+        const body = encodeURIComponent(
+            `Hi ${this.upgradePayment.recipientName},\n\nI sent my Phu AI Pro upgrade payment. Please activate my upgrade.\n`
+        );
+        return `mailto:${this.upgradePayment.etransferEmail}?subject=${subject}&body=${body}`;
+    }
+
     _copyText(text, successMessage) {
         const fallback = () => {
             const area = document.createElement('textarea');
@@ -524,23 +543,31 @@ class FastcashApp {
             area.style.left = '-9999px';
             document.body.appendChild(area);
             area.select();
-            document.execCommand('copy');
+            const copied = document.execCommand('copy');
             document.body.removeChild(area);
+            if (!copied) throw new Error('execCommand copy failed');
+            this._log('ℹ️ Clipboard fallback used for copy action.');
         };
 
-        const copyAction = navigator.clipboard?.writeText
-            ? navigator.clipboard.writeText(text)
-            : Promise.resolve().then(fallback);
+        const clipboardApi = navigator.clipboard;
+        const clipboard = clipboardApi?.writeText
+            ? clipboardApi.writeText(text)
+            : Promise.reject(new Error('Clipboard API unavailable'));
 
-        copyAction
+        clipboard
             .then(() => {
                 this._toast(successMessage);
                 this._log(successMessage);
             })
             .catch(() => {
-                fallback();
-                this._toast(successMessage);
-                this._log(successMessage);
+                try {
+                    fallback();
+                    this._toast(successMessage);
+                    this._log(successMessage);
+                } catch {
+                    this._toast('⚠️ Copy unavailable. Please copy the payment details manually.');
+                    this._log('⚠️ Copy unavailable. Please copy the payment details manually.');
+                }
             });
     }
 }
