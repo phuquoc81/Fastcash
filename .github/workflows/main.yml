@@ -10,6 +10,8 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Check out repository
@@ -22,7 +24,15 @@ jobs:
 
       - name: Validate JavaScript syntax
         run: |
-          for file in *.js; do
+          shopt -s nullglob
+          files=( *.js )
+
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No root-level JavaScript files found to validate."
+            exit 0
+          fi
+
+          for file in "${files[@]}"; do
             node --check "$file"
           done
 
