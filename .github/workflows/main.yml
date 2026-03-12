@@ -1,8 +1,30 @@
-create trap
-[{1981}]
-<Phu Quoc Nguyen 43821 004 6369582 anhvankiet81@gmail.com>
-8.99$ 
-add apps future fix 
-add text coding script 
-version 4584 into the future
-add trap pyramid golden with green light
+name: Main
+
+on:
+  push:
+    branches: ["Main"]
+  pull_request:
+    branches: ["Main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check JavaScript syntax
+        run: find . -name '*.js' -not -path './node_modules/*' -exec node --check {} +
+
+      - name: Build static site
+        run: npm run build
