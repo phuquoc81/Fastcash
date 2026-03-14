@@ -5,9 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fastcash — Passive & Affiliate Income · Remote Jobs by Phu AI</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- OpenTelemetry initialization -->
+    <!-- OpenTelemetry initialization (opt-in for static launches) -->
     <script type="module">
-        import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
+        const searchParams = new URLSearchParams(window.location.search);
+        const telemetryEnabled = searchParams.get('telemetry') === '1'
+            || window.localStorage.getItem('fastcash.telemetry') === 'enabled';
+
+        if (telemetryEnabled) {
+            import('./otel-init.js').catch(err => console.warn('Telemetry initialization skipped:', err));
+        } else {
+            console.info('Telemetry disabled. Enable with ?telemetry=1 or localStorage.setItem("fastcash.telemetry", "enabled").');
+        }
     </script>
 </head>
 <body>

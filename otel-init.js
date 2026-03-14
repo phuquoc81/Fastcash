@@ -1,42 +1,51 @@
 // OpenTelemetry Web SDK initialization
-import { BasicTracerProvider, ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-web';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { W3CTraceContextPropagator } from '@opentelemetry/core';
-import { CompositePropagator, HttpTraceContextPropagator, HttpBaggagePropagator } from '@opentelemetry/core';
-import { B3Propagator } from '@opentelemetry/propagator-b3';
+const hasImportMapSupport = typeof document !== 'undefined'
+  && !!document.querySelector('script[type="importmap"]');
 
-// Create a resource to identify this service
-const resource = Resource.default().merge(
-  new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'fastcash-web',
-    [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
-  }),
-);
+let tracerProvider = null;
 
-// Create the tracer provider
-const tracerProvider = new BasicTracerProvider({ resource });
+if (!hasImportMapSupport) {
+  console.info(
+    'Telemetry bootstrap skipped: static browser launches do not resolve npm package imports without an import map or bundler.',
+  );
+} else {
+  const [
+    { BasicTracerProvider, ConsoleSpanExporter, SimpleSpanProcessor },
+    { OTLPTraceExporter },
+    { Resource },
+    { SemanticResourceAttributes },
+  ] = await Promise.all([
+    import('@opentelemetry/sdk-trace-web'),
+    import('@opentelemetry/exporter-trace-otlp-http'),
+    import('@opentelemetry/resources'),
+    import('@opentelemetry/semantic-conventions'),
+  ]);
 
-// OTLP HTTP exporter for Kubiks
-const otlpExporter = new OTLPTraceExporter({
-  url: 'https://ingest.kubiks.app/v1/traces',
-  headers: {
-    'x-kubiks-key': process.env.REACT_APP_KUBIKS_KEY || 'kubiks_c71a0c0b7664f11a0aa477f86d4840a909ae805d8f83059f977fe92aadbcb540',
-  },
-});
+  const resource = Resource.default().merge(
+    new Resource({
+      [SemanticResourceAttributes.SERVICE_NAME]: 'fastcash-web',
+      [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
+    }),
+  );
 
-// Add processors
-tracerProvider.addSpanProcessor(new SimpleSpanProcessor(otlpExporter));
+  tracerProvider = new BasicTracerProvider({ resource });
 
-// Optional: Add console exporter for debugging (remove in production)
-if (process.env.NODE_ENV !== 'production') {
-  tracerProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+  const otlpExporter = new OTLPTraceExporter({
+    url: 'https://ingest.kubiks.app/v1/traces',
+    headers: {
+      'x-kubiks-key': window.localStorage.getItem('fastcash.kubiksKey') || '',
+    },
+  });
+
+  tracerProvider.addSpanProcessor(new SimpleSpanProcessor(otlpExporter));
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    tracerProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+  }
+
+  tracerProvider.register();
+
+  console.log('OpenTelemetry initialized for FastCash');
 }
-
-// Set the global tracer provider
-tracerProvider.register();
-
-console.log('OpenTelemetry initialized for FastCash');
 
 export { tracerProvider };
