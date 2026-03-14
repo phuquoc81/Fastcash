@@ -121,6 +121,66 @@ body {
     padding: 28px 24px 48px;
 }
 
+/* ── Hero card ─────────────────────────────────────────────────────────────── */
+
+.fc-hero-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(123, 228, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(167, 139, 250, 0.12), rgba(15, 23, 42, 0.85));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(3, 7, 18, 0.35);
+}
+
+.fc-hero-kicker {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 0.75em;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    color: #7dd3fc;
+}
+
+.fc-hero-copy h1 {
+    font-size: clamp(2.1rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    margin-bottom: 12px;
+    color: #f8fafc;
+    max-width: 18ch;
+}
+
+.fc-hero-copy p {
+    color: #cbd5e1;
+    line-height: 1.7;
+    max-width: 62ch;
+}
+
+.fc-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.fc-hero-art {
+    justify-self: end;
+}
+
+.fc-hero-art img {
+    display: block;
+    width: min(100%, 420px);
+    height: auto;
+    border-radius: 20px;
+    border: 1px solid rgba(123, 228, 255, 0.22);
+    box-shadow: 0 18px 44px rgba(8, 15, 32, 0.55);
+}
+
 /* ── Stats row ────────────────────────────────────────────────────────────── */
 
 .fc-stats-row {
@@ -727,6 +787,25 @@ body {
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
+    .fc-hero-card {
+        grid-template-columns: 1fr;
+        padding: 18px;
+    }
+
+    .fc-hero-copy h1 {
+        max-width: none;
+    }
+
+    .fc-hero-art {
+        justify-self: stretch;
+    }
+
+    .fc-hero-art img {
+        width: 100%;
+        max-width: 460px;
+        margin: 0 auto;
+    }
+
     .fc-two-col { grid-template-columns: 1fr; }
 
     .fc-header-inner {
@@ -752,5 +831,3 @@ body {
 @media (max-width: 480px) {
     .fc-stats-row { grid-template-columns: 1fr; }
 }
-
-

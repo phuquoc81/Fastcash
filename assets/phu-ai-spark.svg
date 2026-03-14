@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Every evolution begins with a spark — PHU AI</title>
+  <desc id="desc">A split portrait illustration representing human and AI evolution with the PHU AI brand.</desc>
+  <defs>
+    <linearGradient id="bgLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#121622"/>
+      <stop offset="100%" stop-color="#4a536a"/>
+    </linearGradient>
+    <linearGradient id="bgRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1730"/>
+      <stop offset="100%" stop-color="#7be4ff"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e3b79c"/>
+      <stop offset="100%" stop-color="#8e6049"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c6b8ff"/>
+      <stop offset="45%" stop-color="#6178c8"/>
+      <stop offset="100%" stop-color="#172446"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="25%" r="42%">
+      <stop offset="0%" stop-color="rgba(123,228,255,0.95)"/>
+      <stop offset="45%" stop-color="rgba(123,228,255,0.35)"/>
+      <stop offset="100%" stop-color="rgba(123,228,255,0)"/>
+    </radialGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="leftHalf">
+      <rect x="0" y="0" width="512" height="1024"/>
+    </clipPath>
+    <clipPath id="rightHalf">
+      <rect x="512" y="0" width="512" height="1024"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#090d17"/>
+  <rect width="512" height="1024" fill="url(#bgLeft)"/>
+  <rect x="512" width="512" height="1024" fill="url(#bgRight)"/>
+  <circle cx="835" cy="242" r="260" fill="url(#glow)"/>
+
+  <g clip-path="url(#leftHalf)">
+    <ellipse cx="445" cy="378" rx="244" ry="304" fill="url(#skin)"/>
+    <rect x="286" y="628" width="255" height="270" rx="120" fill="url(#skin)"/>
+    <ellipse cx="208" cy="452" rx="34" ry="62" fill="#b47c60"/>
+    <path d="M257 214c42-108 264-170 392-63 43 37 58 83 59 133-91-29-204-48-297-34-46 7-102 18-154 43-17-23-17-51 0-79z" fill="#14151c"/>
+    <path d="M304 400c39-29 76-38 135-34 19 1 43 8 73 17-34-46-143-61-208 17z" fill="#201a1a"/>
+    <ellipse cx="384" cy="431" rx="45" ry="28" fill="#130a0a"/>
+    <circle cx="395" cy="427" r="10" fill="#f7f2ee"/>
+    <path d="M360 690c62 33 137 28 183-7-21 62-145 86-183 7z" fill="#7e4439"/>
+    <path d="M384 632c21 35 35 72 31 131" stroke="#422118" stroke-width="11" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <g clip-path="url(#rightHalf)">
+    <ellipse cx="579" cy="378" rx="244" ry="304" fill="url(#metal)"/>
+    <rect x="486" y="628" width="255" height="270" rx="120" fill="url(#metal)"/>
+    <ellipse cx="820" cy="452" rx="34" ry="62" fill="#495d9f"/>
+    <path d="M525 155c112-59 290-38 362 90 19 34 28 72 29 118-85-49-212-67-354-37-18-62-33-123-37-171z" fill="#172446"/>
+    <path d="M548 211c59 12 118 35 173 81" stroke="#d7eeff" stroke-width="4" opacity="0.7" fill="none"/>
+    <path d="M574 174c92 17 162 62 223 129" stroke="#87ddff" stroke-width="3" opacity="0.7" fill="none"/>
+    <path d="M612 142c97 24 174 76 246 161" stroke="#7cd4ff" stroke-width="2" opacity="0.55" fill="none"/>
+    <path d="M548 414c38-32 81-44 148-34 25 4 44 11 67 25-20-56-120-88-215 9z" fill="#0e1430"/>
+    <ellipse cx="662" cy="436" rx="50" ry="31" fill="#0f1427"/>
+    <circle cx="673" cy="433" r="12" fill="#7be4ff" filter="url(#softGlow)"/>
+    <path d="M696 558c-74 34-114 90-136 168" stroke="#7cd4ff" stroke-width="3" opacity="0.9" fill="none"/>
+    <path d="M722 516c-93 18-151 76-185 167" stroke="#8fe3ff" stroke-width="2" opacity="0.65" fill="none"/>
+    <path d="M560 731c53 34 128 36 181 8-16 53-135 84-181-8z" fill="#5e669b"/>
+    <g fill="#7be4ff" filter="url(#softGlow)">
+      <circle cx="702" cy="546" r="4"/>
+      <circle cx="719" cy="558" r="5"/>
+      <circle cx="736" cy="568" r="4"/>
+      <circle cx="754" cy="578" r="4"/>
+      <circle cx="771" cy="588" r="4"/>
+    </g>
+  </g>
+
+  <rect x="510" y="72" width="4" height="760" fill="rgba(255,255,255,0.32)"/>
+
+  <g transform="translate(71 841)">
+    <text x="0" y="0" fill="#f8fafc" font-size="46" font-weight="700" font-family="Segoe UI, Arial, sans-serif" letter-spacing="4">EVERY EVOLUTION</text>
+    <text x="0" y="54" fill="#f8fafc" font-size="46" font-weight="700" font-family="Segoe UI, Arial, sans-serif" letter-spacing="4">BEGINS WITH A SPARK...</text>
+  </g>
+
+  <g transform="translate(768 772)">
+    <rect width="176" height="176" rx="36" fill="rgba(9,13,23,0.8)" stroke="rgba(123,228,255,0.35)"/>
+    <rect x="26" y="22" width="96" height="96" rx="24" fill="url(#skin)"/>
+    <rect x="74" y="22" width="48" height="96" rx="24" fill="url(#metal)"/>
+    <circle cx="58" cy="63" r="8" fill="#1f1a1a"/>
+    <circle cx="90" cy="63" r="8" fill="#7be4ff" filter="url(#softGlow)"/>
+    <path d="M42 91c17 11 43 11 62 0" stroke="#4b3b39" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <text x="88" y="150" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="700" font-family="Segoe UI, Arial, sans-serif" letter-spacing="2">PHU AI</text>
+  </g>
+</svg>

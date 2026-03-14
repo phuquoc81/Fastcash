@@ -78,15 +78,21 @@ class FastcashApp {
 
     _bindNav() {
         document.querySelectorAll('.fc-nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.fc-nav-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const tab = btn.dataset.tab;
-                document.querySelectorAll('.fc-tab').forEach(t => t.classList.add('hidden'));
-                document.getElementById(`tab-${tab}`).classList.remove('hidden');
-                if (tab === 'optimizer') this._drawCanvas();
-            });
+            btn.addEventListener('click', () => this._showTab(btn.dataset.tab));
         });
+
+        document.querySelectorAll('.fc-hero-actions [data-tab]').forEach(btn => {
+            btn.addEventListener('click', () => this._showTab(btn.dataset.tab));
+        });
+    }
+
+    _showTab(tab) {
+        document.querySelectorAll('.fc-nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+        document.querySelectorAll('.fc-tab').forEach(panel => panel.classList.add('hidden'));
+        document.getElementById(`tab-${tab}`).classList.remove('hidden');
+        if (tab === 'optimizer') this._drawCanvas();
     }
 
     // ── Dashboard bindings ────────────────────────────────────────────────────
