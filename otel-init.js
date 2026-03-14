@@ -1,42 +1,91 @@
-// OpenTelemetry Web SDK initialization
-import { BasicTracerProvider, ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-web';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { W3CTraceContextPropagator } from '@opentelemetry/core';
-import { CompositePropagator, HttpTraceContextPropagator, HttpBaggagePropagator } from '@opentelemetry/core';
-import { B3Propagator } from '@opentelemetry/propagator-b3';
-
-// Create a resource to identify this service
-const resource = Resource.default().merge(
-  new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'fastcash-web',
-    [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
-  }),
-);
-
-// Create the tracer provider
-const tracerProvider = new BasicTracerProvider({ resource });
-
-// OTLP HTTP exporter for Kubiks
-const otlpExporter = new OTLPTraceExporter({
-  url: 'https://ingest.kubiks.app/v1/traces',
-  headers: {
-    'x-kubiks-key': process.env.REACT_APP_KUBIKS_KEY || 'kubiks_c71a0c0b7664f11a0aa477f86d4840a909ae805d8f83059f977fe92aadbcb540',
-  },
+const DEFAULT_CONFIG = Object.freeze({
+  serviceName: 'fastcash-web',
+  serviceVersion: '1.0.0',
+  endpoint: '',
+  apiKey: '',
+  debug: false,
 });
 
-// Add processors
-tracerProvider.addSpanProcessor(new SimpleSpanProcessor(otlpExporter));
+function readTelemetryConfig() {
+  const runtimeConfig = typeof window !== 'undefined' && window.FASTCASH_TELEMETRY_CONFIG
+    ? window.FASTCASH_TELEMETRY_CONFIG
+    : {};
 
-// Optional: Add console exporter for debugging (remove in production)
-if (process.env.NODE_ENV !== 'production') {
-  tracerProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+  return { ...DEFAULT_CONFIG, ...runtimeConfig };
 }
 
-// Set the global tracer provider
-tracerProvider.register();
+function createTelemetryClient(config) {
+  const hasEndpoint = Boolean(config.endpoint);
+  const hasApiKey = Boolean(config.apiKey);
+  const enabled = hasEndpoint && hasApiKey;
+  const misconfigured = hasEndpoint !== hasApiKey;
 
-console.log('OpenTelemetry initialized for FastCash');
+  function debugLog(message, details) {
+    if (config.debug) {
+      console.info(message, details ?? '');
+    }
+  }
 
-export { tracerProvider };
+  async function send(eventName, attributes = {}) {
+    if (!enabled) return false;
+
+    const payload = JSON.stringify({
+      service: {
+        name: config.serviceName,
+        version: config.serviceVersion,
+      },
+      eventName,
+      attributes,
+      timestamp: new Date().toISOString(),
+      page: typeof window !== 'undefined' ? window.location.href : '',
+    });
+
+    try {
+      await fetch(config.endpoint, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-kubiks-key': config.apiKey,
+        },
+        body: payload,
+        keepalive: true,
+      });
+      return true;
+    } catch (error) {
+      console.warn('FastCash telemetry send failed.', error);
+      return false;
+    }
+  }
+
+  return {
+    enabled,
+    misconfigured,
+    track(eventName, attributes) {
+      debugLog(`[Telemetry] ${eventName}`, attributes);
+      return send(eventName, attributes);
+    },
+    trackError(name, message, stack = '') {
+      return send('error', {
+        name,
+        message,
+        stack,
+      });
+    },
+  };
+}
+
+const telemetryClient = createTelemetryClient(readTelemetryConfig());
+
+if (typeof window !== 'undefined') {
+  window.fastcashTelemetry = telemetryClient;
+}
+
+if (telemetryClient.enabled) {
+  telemetryClient.track('app.init');
+} else if (telemetryClient.misconfigured) {
+  console.warn('FastCash telemetry is misconfigured. Set both endpoint and apiKey in window.FASTCASH_TELEMETRY_CONFIG to enable.');
+} else {
+  console.info('FastCash telemetry is disabled. Set window.FASTCASH_TELEMETRY_CONFIG to enable.');
+}
+
+export { telemetryClient };
