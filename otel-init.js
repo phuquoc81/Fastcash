@@ -1,13 +1,17 @@
 // OpenTelemetry Web SDK initialization
 const LOCAL_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
-
-const hasImportMapSupport = typeof document !== 'undefined'
+const hasImportMapBrowserSupport = typeof HTMLScriptElement !== 'undefined'
+  && typeof HTMLScriptElement.supports === 'function'
+  && HTMLScriptElement.supports('importmap');
+const hasConfiguredImportMap = typeof document !== 'undefined'
   && !!document.querySelector('script[type="importmap"]');
 
 let tracerProvider = null;
 
-if (!hasImportMapSupport) {
-  console.debug('Telemetry initialization skipped: import-map support not detected.');
+if (!hasImportMapBrowserSupport) {
+  console.debug('Telemetry initialization skipped: browser import-map support not detected.');
+} else if (!hasConfiguredImportMap) {
+  console.debug('Telemetry initialization skipped: no import map is configured for telemetry modules.');
 } else {
   const kubiksKey = window.localStorage.getItem('fastcash.kubiksKey');
 
