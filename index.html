@@ -8,6 +8,7 @@
     <!-- OpenTelemetry initialization (opt-in) -->
     <script type="module">
         const params = new URLSearchParams(window.location.search);
+        // Avoid loading the optional telemetry module unless the user explicitly opts in.
         const telemetryEnabled = params.get('telemetry') === '1' || window.localStorage.getItem('fastcash.telemetry') === 'enabled';
 
         if (telemetryEnabled) {

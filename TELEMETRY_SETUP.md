@@ -36,6 +36,7 @@ index.html?telemetry=1&kubiksKey=<your-kubiks-key>
 ```
 
 Use your own Kubiks key at runtime. Do not commit credentials into the repository.
+Telemetry starts only when the opt-in flag is enabled and a Kubiks key is available.
 
 ### 3. Verify Setup
 
@@ -137,7 +138,7 @@ If you deploy Fastcash behind a framework that supports environment variables or
 
 ## Production Checklist
 
-- [ ] Remove `console.log` telemetry messages (or set NODE_ENV=production)
+- [ ] Remove local debug logging before broad production rollout if you no longer want console output on localhost
 - [ ] Provide the Kubiks key at runtime instead of committing it
 - [ ] Test on staging environment first
 - [ ] Configure appropriate sampling if needed

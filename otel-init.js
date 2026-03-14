@@ -41,14 +41,11 @@ const resource = Resource.default().merge(
 );
 
 const kubiksKey = readKubiksKey();
-let tracerProvider = null;
+const tracerProvider = kubiksKey ? new BasicTracerProvider({ resource }) : null;
 
 if (!kubiksKey) {
-  console.info('OpenTelemetry disabled: provide a Kubiks key with ?kubiksKey=... or localStorage.');
+  console.info('OpenTelemetry enabled, but no Kubiks key was configured. Provide one with ?kubiksKey=... or localStorage.');
 } else {
-  // Create the tracer provider
-  tracerProvider = new BasicTracerProvider({ resource });
-
   // OTLP HTTP exporter for Kubiks
   const otlpExporter = new OTLPTraceExporter({
     url: OTLP_TRACES_URL,
