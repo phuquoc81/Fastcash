@@ -1,6 +1,6 @@
 # OpenTelemetry Setup for FastCash
 
-This project now includes comprehensive observability through OpenTelemetry and Kubiks.
+This project includes optional observability through OpenTelemetry and Kubiks.
 
 ## What's New
 
@@ -8,11 +8,10 @@ This project now includes comprehensive observability through OpenTelemetry and 
 - `otel-init.js` - OpenTelemetry SDK initialization
 - `otel-utils.js` - Telemetry utility functions for custom tracking
 - `package.json` - Dependencies for web-based OpenTelemetry
-- `.env.example` - Environment variable template
 - `TELEMETRY_SETUP.md` - This file
 
 ### Changes Made
-- Updated `index.html` to initialize OpenTelemetry on page load
+- Updated `index.html` so telemetry is opt-in for static launches
 
 ## Setup Instructions
 
@@ -21,14 +20,23 @@ This project now includes comprehensive observability through OpenTelemetry and 
 npm install
 ```
 
-### 2. Configure Environment Variables
+### 2. Enable Telemetry for a Static Launch
 
-Create a `.env.local` file (or use `.env` for Vercel):
-```bash
-REACT_APP_KUBIKS_KEY=kubiks_c71a0c0b7664f11a0aa477f86d4840a909ae805d8f83059f977fe92aadbcb540
-OTEL_EXPORTER_OTLP_ENDPOINT=https://ingest.kubiks.app
-OTEL_SERVICE_NAME=fastcash-web
+Telemetry is disabled by default. Enable it with either:
+
+```js
+localStorage.setItem('fastcash.telemetry', 'enabled');
+localStorage.setItem('fastcash.telemetry.kubiksKey', '<your-kubiks-key>');
 ```
+
+or by opening the app with query parameters:
+
+```text
+index.html?telemetry=1&kubiksKey=<your-kubiks-key>
+```
+
+Use your own Kubiks key at runtime. Do not commit credentials into the repository.
+Telemetry starts only when both query parameters are satisfied: `telemetry=1` enables the opt-in path and `kubiksKey=...` supplies the runtime credential. The same rule applies when using `localStorage`.
 
 ### 3. Verify Setup
 
@@ -96,13 +104,7 @@ window.addEventListener('load', () => {
 
 ## Vercel Integration
 
-### Enable Log Drains
-1. Go to Vercel Project Settings → Functions → Web Analytics
-2. Configure to send logs to Kubiks endpoint
-
-### Enable Trace Drains
-1. Go to Vercel Project Settings → Integrations → OpenTelemetry
-2. Configure trace exporter endpoint
+If you deploy FastCash behind a framework that supports environment variables or a bundler, inject the Kubiks key at deploy time and keep the browser bundle free of committed secrets.
 
 ## What Gets Tracked
 
@@ -123,9 +125,8 @@ window.addEventListener('load', () => {
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `REACT_APP_KUBIKS_KEY` | Kubiks API key for authentication | Yes |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | Kubiks ingestion endpoint | Yes |
-| `OTEL_SERVICE_NAME` | Your service name in Kubiks | No (default: fastcash-web) |
+| `fastcash.telemetry` | Set to `enabled` in `localStorage` to opt in | Yes |
+| `fastcash.telemetry.kubiksKey` | Kubiks API key stored in `localStorage` or passed by `kubiksKey` query param | Yes |
 
 ## Testing
 
@@ -137,8 +138,8 @@ window.addEventListener('load', () => {
 
 ## Production Checklist
 
-- [ ] Remove `console.log` telemetry messages (or set NODE_ENV=production)
-- [ ] Set proper API key in production environment
+- [ ] Remove local debug logging before broad production rollout if you no longer want console output on localhost
+- [ ] Provide the Kubiks key at runtime instead of committing it
 - [ ] Test on staging environment first
 - [ ] Configure appropriate sampling if needed
 - [ ] Set up alerts in Kubiks dashboard
@@ -160,4 +161,3 @@ window.addEventListener('load', () => {
 - [Kubiks Documentation](https://docs.kubiks.ai)
 - [OpenTelemetry JS Documentation](https://opentelemetry.io/docs/instrumentation/js/)
 - [OTLP Protocol](https://opentelemetry.io/docs/specs/otlp/)
-
