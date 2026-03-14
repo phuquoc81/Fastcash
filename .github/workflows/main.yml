@@ -2,18 +2,15 @@ name: Main
 
 on:
   push:
-    branches:
-      - Main
+    branches: ["Main"]
   pull_request:
-    branches:
-      - Main
+    branches: ["Main"]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
-  build:
+  validate:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +20,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      - name: Check JavaScript syntax
+      - name: Validate JavaScript syntax
         run: node --check *.js
 
       - name: Run build
