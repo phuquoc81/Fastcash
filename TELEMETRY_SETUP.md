@@ -36,7 +36,7 @@ index.html?telemetry=1&kubiksKey=<your-kubiks-key>
 ```
 
 Use your own Kubiks key at runtime. Do not commit credentials into the repository.
-Telemetry starts only when the opt-in flag is enabled and a Kubiks key is available.
+Telemetry starts only when both query parameters are satisfied: `telemetry=1` enables the opt-in path and `kubiksKey=...` supplies the runtime credential. The same rule applies when using `localStorage`.
 
 ### 3. Verify Setup
 
@@ -104,7 +104,7 @@ window.addEventListener('load', () => {
 
 ## Vercel Integration
 
-If you deploy Fastcash behind a framework that supports environment variables or a bundler, inject the Kubiks key at deploy time and keep the browser bundle free of committed secrets.
+If you deploy FastCash behind a framework that supports environment variables or a bundler, inject the Kubiks key at deploy time and keep the browser bundle free of committed secrets.
 
 ## What Gets Tracked
 
