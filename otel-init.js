@@ -68,4 +68,66 @@ if (!kubiksKey) {
   console.log('OpenTelemetry initialized for FastCash');
 }
 
-export { tracerProvider };
+  async function send(eventName, attributes = {}) {
+    if (!enabled) return false;
+
+    const payload = JSON.stringify({
+      service: {
+        name: config.serviceName,
+        version: config.serviceVersion,
+      },
+      eventName,
+      attributes,
+      timestamp: new Date().toISOString(),
+      page: typeof window !== 'undefined' ? window.location.href : '',
+    });
+
+    try {
+      await fetch(config.endpoint, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-kubiks-key': config.apiKey,
+        },
+        body: payload,
+        keepalive: true,
+      });
+      return true;
+    } catch (error) {
+      console.warn('FastCash telemetry send failed.', error);
+      return false;
+    }
+  }
+
+  return {
+    enabled,
+    misconfigured,
+    track(eventName, attributes) {
+      debugLog(`[Telemetry] ${eventName}`, attributes);
+      return send(eventName, attributes);
+    },
+    trackError(name, message, stack = '') {
+      return send('error', {
+        name,
+        message,
+        stack,
+      });
+    },
+  };
+}
+
+const telemetryClient = createTelemetryClient(readTelemetryConfig());
+
+if (typeof window !== 'undefined') {
+  window.fastcashTelemetry = telemetryClient;
+}
+
+if (telemetryClient.enabled) {
+  telemetryClient.track('app.init');
+} else if (telemetryClient.misconfigured) {
+  console.warn('FastCash telemetry is misconfigured. Set both endpoint and apiKey in window.FASTCASH_TELEMETRY_CONFIG to enable.');
+} else {
+  console.info('FastCash telemetry is disabled. Set window.FASTCASH_TELEMETRY_CONFIG to enable.');
+}
+
+export { telemetryClient };

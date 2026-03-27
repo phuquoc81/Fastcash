@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fastcash — Passive & Affiliate Income · Remote Jobs by Phu AI</title>
+    <meta name="description" content="Fastcash generates passive income, affiliate income, and remote job opportunities powered by Phu AI and Phuoptimizer 81.">
+    <meta property="og:title" content="Fastcash — Powered by Phu AI">
+    <meta property="og:description" content="Every evolution begins with a spark. Fastcash combines passive income, affiliate income, and remote jobs in one dashboard.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/phu-ai-spark.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fastcash — Powered by Phu AI">
+    <meta name="twitter:description" content="Every evolution begins with a spark. Powered by Phu AI and Phuoptimizer 81.">
+    <meta name="twitter:image" content="assets/phu-ai-spark.png">
+    <link rel="icon" href="assets/phu-ai-spark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
     <!-- OpenTelemetry initialization (opt-in) -->
     <script type="module">
@@ -22,14 +32,14 @@
     <header class="fc-header">
         <div class="fc-header-inner">
             <div class="fc-logo">
-                <span class="fc-logo-icon">⚡</span>
+                <span class="fc-logo-icon">&#x26A1;</span>
                 <span class="fc-logo-text">Fastcash</span>
             </div>
             <nav class="fc-nav">
-                <button class="fc-nav-btn active" data-tab="dashboard">📊 Dashboard</button>
-                <button class="fc-nav-btn" data-tab="jobs">🤖 Remote Jobs</button>
-                <button class="fc-nav-btn" data-tab="optimizer">⚙️ Phuoptimizer 81</button>
-                <button class="fc-nav-btn" data-tab="blog">📰 phubers.blog</button>
+                <button class="fc-nav-btn active" data-tab="dashboard">&#x1F4CA; Dashboard</button>
+                <button class="fc-nav-btn" data-tab="jobs">&#x1F916; Remote Jobs</button>
+                <button class="fc-nav-btn" data-tab="optimizer">&#x2699;&#xFE0F; Phuoptimizer 81</button>
+                <button class="fc-nav-btn" data-tab="blog">&#x1F4F0; phubers.blog</button>
             </nav>
         </div>
     </header>
@@ -40,10 +50,25 @@
     <!-- ── DASHBOARD TAB ─────────────────────────────────────────────────── -->
     <section id="tab-dashboard" class="fc-tab active">
 
+        <div class="fc-hero-card">
+            <div class="fc-hero-copy">
+                <span class="fc-hero-kicker">PHU AI BRAND STORY</span>
+                <h1>Every evolution begins with a spark.</h1>
+                <p>Fastcash helps you turn AI-powered automation into passive income, affiliate earnings, and on-demand remote job momentum — all from one focused dashboard.</p>
+                <div class="fc-hero-actions">
+                    <button class="fc-btn fc-btn-primary" data-tab="jobs">🤖 Explore Remote Jobs</button>
+                    <button class="fc-btn fc-btn-secondary" data-tab="blog">📰 Open phubers.blog</button>
+                </div>
+            </div>
+            <div class="fc-hero-art">
+                <img src="assets/phu-ai-spark.svg" alt="Split human and AI PHU AI artwork with the tagline Every evolution begins with a spark.">
+            </div>
+        </div>
+
         <!-- Hero stats row -->
         <div class="fc-stats-row">
             <div class="fc-stat-card" id="statPassive">
-                <div class="fc-stat-icon">💰</div>
+                <div class="fc-stat-icon">&#x1F4B0;</div>
                 <div class="fc-stat-body">
                     <div class="fc-stat-label">Passive Income</div>
                     <div class="fc-stat-value" id="passiveTotal">$0.00</div>
@@ -51,7 +76,7 @@
                 </div>
             </div>
             <div class="fc-stat-card" id="statAffiliate">
-                <div class="fc-stat-icon">🔗</div>
+                <div class="fc-stat-icon">&#x1F517;</div>
                 <div class="fc-stat-body">
                     <div class="fc-stat-label">Affiliate Income</div>
                     <div class="fc-stat-value" id="affiliateTotal">$0.00</div>
@@ -59,7 +84,7 @@
                 </div>
             </div>
             <div class="fc-stat-card" id="statJobs">
-                <div class="fc-stat-icon">💼</div>
+                <div class="fc-stat-icon">&#x1F4BC;</div>
                 <div class="fc-stat-body">
                     <div class="fc-stat-label">Jobs Completed</div>
                     <div class="fc-stat-value" id="jobsDone">0</div>
@@ -67,7 +92,7 @@
                 </div>
             </div>
             <div class="fc-stat-card fc-stat-total">
-                <div class="fc-stat-icon">🏆</div>
+                <div class="fc-stat-icon">&#x1F3C6;</div>
                 <div class="fc-stat-body">
                     <div class="fc-stat-label">Total Earnings</div>
                     <div class="fc-stat-value" id="grandTotal">$0.00</div>
@@ -81,7 +106,7 @@
             <!-- Passive Income Engine -->
             <div class="fc-panel">
                 <div class="fc-panel-header">
-                    <h2>💰 Passive Income Engine</h2>
+                    <h2>&#x1F4B0; Passive Income Engine</h2>
                     <span class="fc-badge fc-badge-green" id="passiveBadge">RUNNING</span>
                 </div>
                 <p class="fc-panel-desc">Phu AI automatically generates passive income streams on your behalf. Powered by Phuoptimizer 81.</p>
@@ -93,18 +118,18 @@
                     <div class="fc-progress-bar-wrap"><div class="fc-progress-bar" id="passiveOptBar" style="width:100%"></div></div>
                 </div>
                 <div class="fc-income-streams" id="passiveStreams"></div>
-                <button class="fc-btn fc-btn-primary" id="boostPassiveBtn">⚡ Boost with Phuoptimizer</button>
+                <button class="fc-btn fc-btn-primary" id="boostPassiveBtn">&#x26A1; Boost with Phuoptimizer</button>
             </div>
 
             <!-- Affiliate Income Engine -->
             <div class="fc-panel">
                 <div class="fc-panel-header">
-                    <h2>🔗 Affiliate Income Engine</h2>
+                    <h2>&#x1F517; Affiliate Income Engine</h2>
                     <span class="fc-badge fc-badge-blue" id="affiliateBadge">ACTIVE</span>
                 </div>
                 <p class="fc-panel-desc">Fastcash automatically promotes and tracks affiliate links through phubers.blog and partner networks.</p>
                 <div class="fc-affiliate-list" id="affiliateList"></div>
-                <button class="fc-btn fc-btn-secondary" id="refreshAffiliateBtn">🔄 Refresh Affiliate Links</button>
+                <button class="fc-btn fc-btn-secondary" id="refreshAffiliateBtn">&#x1F504; Refresh Affiliate Links</button>
             </div>
 
         </div>
@@ -112,7 +137,7 @@
         <!-- Activity Log -->
         <div class="fc-panel fc-panel-log">
             <div class="fc-panel-header">
-                <h2>📋 Activity Log</h2>
+                <h2>&#x1F4CB; Activity Log</h2>
                 <button class="fc-btn fc-btn-ghost fc-btn-sm" id="clearLogBtn">Clear</button>
             </div>
             <div id="activityLog" class="fc-log"></div>
@@ -124,10 +149,10 @@
     <section id="tab-jobs" class="fc-tab hidden">
         <div class="fc-section-header">
             <div>
-                <h2>🤖 Remote Jobs — Powered by Phu AI</h2>
+                <h2>&#x1F916; Remote Jobs &mdash; Powered by Phu AI</h2>
                 <p class="fc-section-desc">Phu AI scans companies and matches the best remote work opportunities. Jobs are worked automatically using Phuoptimizer 81.</p>
             </div>
-            <button class="fc-btn fc-btn-primary" id="scanJobsBtn">🔍 Scan for New Jobs</button>
+            <button class="fc-btn fc-btn-primary" id="scanJobsBtn">&#x1F50D; Scan for New Jobs</button>
         </div>
 
         <div class="fc-job-filters">
@@ -144,7 +169,7 @@
     <section id="tab-optimizer" class="fc-tab hidden">
         <div class="fc-section-header">
             <div>
-                <h2>⚙️ Phuoptimizer 81</h2>
+                <h2>&#x2699;&#xFE0F; Phuoptimizer 81</h2>
                 <p class="fc-section-desc">Control the core optimization engine that powers all Fastcash income streams.</p>
             </div>
             <span class="fc-badge fc-badge-green" id="optStatusBadge">ONLINE</span>
@@ -174,7 +199,7 @@
                         <span class="fc-toggle-slider"></span>
                     </label>
                 </div>
-                <button class="fc-btn fc-btn-primary fc-btn-full" id="applyOptimizerBtn">⚡ Apply Settings</button>
+                <button class="fc-btn fc-btn-primary fc-btn-full" id="applyOptimizerBtn">&#x26A1; Apply Settings</button>
             </div>
 
             <div class="fc-panel">
@@ -189,15 +214,15 @@
     <section id="tab-blog" class="fc-tab hidden">
         <div class="fc-section-header">
             <div>
-                <h2>📰 phubers.blog</h2>
+                <h2>&#x1F4F0; phubers.blog</h2>
                 <p class="fc-section-desc">Latest posts from phubers.blog — the content engine behind your affiliate income.</p>
             </div>
-            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-secondary">🌐 Visit phubers.blog</a>
+            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-secondary">&#x1F310; Visit phubers.blog</a>
         </div>
         <div id="blogFeed" class="fc-blog-grid"></div>
         <div class="fc-blog-cta">
             <p>phubers.blog is your affiliate content hub. Every post automatically generates affiliate income through Fastcash.</p>
-            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-primary">📖 Read Full Blog</a>
+            <a href="https://phubers.blog" target="_blank" rel="noopener noreferrer" class="fc-btn fc-btn-primary">&#x1F4D6; Read Full Blog</a>
         </div>
     </section>
 

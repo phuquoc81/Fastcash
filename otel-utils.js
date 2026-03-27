@@ -1,37 +1,41 @@
-// OpenTelemetry utilities for custom tracking
-import { trace } from '@opentelemetry/api';
+const MAX_STACK_LENGTH = 1000;
 
-const tracer = trace.getTracer('fastcash-web', '1.0.0');
+function getTelemetryClient() {
+  if (typeof window !== 'undefined' && window.fastcashTelemetry) {
+    return window.fastcashTelemetry;
+  }
+
+  return {
+    track() {
+      return false;
+    },
+    trackError() {
+      return false;
+    },
+  };
+}
 
 /**
  * Track page navigation/tab changes
  */
 export function trackTabChange(tabName) {
-  const span = tracer.startSpan('tab.change', {
-    attributes: {
-      'tab.name': tabName,
-      'user.action': 'navigation',
-    },
+  return getTelemetryClient().track('tab.change', {
+    'tab.name': tabName,
+    'user.action': 'navigation',
   });
-  span.end();
-  console.log(`[Telemetry] Tab changed to: ${tabName}`);
 }
 
 /**
  * Track user interactions (clicks, form submissions)
  */
 export function trackUserAction(actionName, details = {}) {
-  const span = tracer.startSpan('user.action', {
-    attributes: {
-      'action.name': actionName,
-      ...Object.entries(details).reduce((acc, [key, value]) => {
-        acc[`action.${key}`] = String(value);
-        return acc;
-      }, {}),
-    },
+  return getTelemetryClient().track('user.action', {
+    'action.name': actionName,
+    ...Object.entries(details).reduce((acc, [key, value]) => {
+      acc[`action.${key}`] = String(value);
+      return acc;
+    }, {}),
   });
-  span.end();
-  console.log(`[Telemetry] User action: ${actionName}`, details);
 }
 
 /**
@@ -39,63 +43,71 @@ export function trackUserAction(actionName, details = {}) {
  */
 export function trackPageMetrics() {
   if (typeof window !== 'undefined' && window.performance) {
+    const navigationEntry = window.performance.getEntriesByType('navigation')[0];
+
+    if (navigationEntry) {
+      return getTelemetryClient().track('page.load', {
+        'page.load_time_ms': Math.round(navigationEntry.loadEventEnd),
+        'page.dom_interactive_ms': Math.round(navigationEntry.domInteractive),
+        'page.dom_complete_ms': Math.round(navigationEntry.domComplete),
+      });
+    }
+
     const perfData = window.performance.timing;
-    const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-    const span = tracer.startSpan('page.load', {
-      attributes: {
-        'page.load_time_ms': pageLoadTime,
-        'page.dom_interactive_ms': perfData.domInteractive - perfData.navigationStart,
-        'page.dom_complete_ms': perfData.domComplete - perfData.navigationStart,
-      },
+    const navigationStart = perfData.navigationStart || 0;
+    return getTelemetryClient().track('page.load', {
+      'page.load_time_ms': perfData.loadEventEnd - navigationStart,
+      'page.dom_interactive_ms': perfData.domInteractive - navigationStart,
+      'page.dom_complete_ms': perfData.domComplete - navigationStart,
     });
-    span.end();
-    console.log(`[Telemetry] Page load time: ${pageLoadTime}ms`);
   }
+
+  return false;
 }
 
 /**
  * Track errors
  */
 export function trackError(errorName, errorMessage, errorStack = '') {
-  const span = tracer.startSpan('error', {
-    attributes: {
-      'error.name': errorName,
-      'error.message': errorMessage,
-      'error.stack': errorStack,
-    },
-  });
-  span.recordException(new Error(errorMessage));
-  span.setStatus({ code: 2 }); // ERROR
-  span.end();
-  console.error(`[Telemetry] Error tracked: ${errorName} - ${errorMessage}`);
+  return getTelemetryClient().trackError(
+    errorName,
+    errorMessage,
+    // Keep telemetry payloads small and avoid leaking oversized stacks.
+    String(errorStack).slice(0, MAX_STACK_LENGTH),
+  );
 }
 
 /**
  * Track API calls
  */
 export function trackAPICall(endpoint, method = 'GET', details = {}) {
-  const span = tracer.startSpan('api.call', {
-    attributes: {
-      'http.method': method,
-      'http.url': endpoint,
-      ...Object.entries(details).reduce((acc, [key, value]) => {
-        acc[`api.${key}`] = String(value);
-        return acc;
-      }, {}),
-    },
+  const telemetry = getTelemetryClient();
+  const startedAt = Date.now();
+
+  telemetry.track('api.call.start', {
+    'http.method': method,
+    'http.url': endpoint,
+    ...Object.entries(details).reduce((acc, [key, value]) => {
+      acc[`api.${key}`] = String(value);
+      return acc;
+    }, {}),
   });
+
   return {
     end: (statusCode, duration) => {
-      span.setAttributes({
+      return telemetry.track('api.call.complete', {
+        'http.method': method,
+        'http.url': endpoint,
         'http.status_code': statusCode,
-        'http.duration_ms': duration,
+        'http.duration_ms': duration ?? (Date.now() - startedAt),
       });
-      span.end();
-      console.log(`[Telemetry] API call: ${method} ${endpoint} - ${statusCode} (${duration}ms)`);
     },
     recordError: (error) => {
-      span.recordException(error);
-      span.end();
+      return telemetry.trackError(
+        'api.call',
+        error?.message || `API call failed: ${method} ${endpoint}`,
+        error?.stack || '',
+      );
     },
   };
 }
