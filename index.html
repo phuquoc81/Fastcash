@@ -15,9 +15,15 @@
     <meta name="twitter:image" content="assets/phu-ai-spark.png">
     <link rel="icon" href="assets/phu-ai-spark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
-    <!-- OpenTelemetry initialization -->
+    <!-- OpenTelemetry initialization (opt-in) -->
     <script type="module">
-        import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
+        const params = new URLSearchParams(window.location.search);
+        // Avoid loading the optional telemetry module unless the user explicitly opts in.
+        const telemetryEnabled = params.get('telemetry') === '1' || window.localStorage.getItem('fastcash.telemetry') === 'enabled';
+
+        if (telemetryEnabled) {
+            import('./otel-init.js').catch(err => console.error('Failed to initialize OpenTelemetry:', err));
+        }
     </script>
 </head>
 <body>
